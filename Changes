@@ -1,6 +1,7 @@
 Revision history for XML::Genx.
 
 0.10  Thu Feb 17 20:40:03 GMT 2005
+	- Add a small benchmark.
 	- Implement StartDocString() for the common case of outputting
           to a string.
 

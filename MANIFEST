@@ -12,6 +12,7 @@ README
 src/charProps.c
 src/genx.c
 src/genx.h
+t/Benchmark.pl
 t/XML-Genx-Simple.t
 t/XML-Genx.t
 typemap
