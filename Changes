@@ -1,6 +1,7 @@
 Revision history for XML::Genx.
 
 0.04  Tue Nov 30 23:14:44 GMT 2004
+	- Make namespace optional on Declare{Element,Attribute}().
 	- Fix up the docs to mention AddAttributeLiteral().
 	- Make the namespace parameter in StartElementLiteral()
 	  optional.  Ditto for AddAttributeLiteral().

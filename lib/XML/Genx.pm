@@ -146,10 +146,11 @@ Returns the current prefix in scope for this namespace.
 B<NB>: This object is only valid as long as the original L<XML::Genx>
 object that created it is still alive.
 
-=item DeclareElement ( NS, NAME )
+=item DeclareElement ( [NS], NAME )
 
 Returns a new element object.  NS must an object returned by
-DeclareNamespace(), or undef to indicate no namespace.
+DeclareNamespace(), or undef to indicate no namespace (or not present
+at all).
 
 The resulting object has one method available to call.
 
@@ -164,10 +165,11 @@ Outputs a start tag.
 B<NB>: This object is only valid as long as the original L<XML::Genx>
 object that created it is still alive.
 
-=item DeclareAttribute ( NS, NAME )
+=item DeclareAttribute ( [NS], NAME )
 
 Returns a new attribute object.  NS must an object returned by
-DeclareNamespace(), or undef to indicate no namespace.
+DeclareNamespace(), or undef to indicate no namespace (or not present
+at all).
 
 There is one method defined for this object.
 

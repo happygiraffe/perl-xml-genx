@@ -345,16 +345,32 @@ genxDeclareNamespace( w, uri, prefix_sv )
         XSRETURN_UNDEF;
     }
 
-# XXX Ensure ns is optional.
 void
-genxDeclareElement( w, ns, type )
+genxDeclareElement( w, ... )
     XML_Genx    w
-    XML_Genx_Namespace ns
-    constUtf8     type
   PREINIT:
-    genxStatus  st;
-    XML_Genx_Element el;
+    genxStatus         st;
+    XML_Genx_Element   el;
+    XML_Genx_Namespace ns;
+    constUtf8          type;
   PPCODE:
+    if ( items == 2 ) {
+        ns = (XML_Genx_Namespace) NULL;
+        type = (constUtf8)SvPV_nolen(ST(1));
+    } else if ( items == 3 ) {
+        /*  Bleargh, would be nice to be able to reuse typemap here */
+	if (ST(1) == &PL_sv_undef) {
+	    ns = (XML_Genx_Namespace) NULL;
+	} else if (sv_derived_from(ST(1), "XML::Genx::Namespace")) {
+	    IV tmp = SvIV((SV*)SvRV(ST(1)));
+	    ns = INT2PTR(XML_Genx_Namespace, tmp);
+	} else {
+	    croak("ns is not undef or of type XML::Genx::Namespace");
+	}
+        type = (constUtf8)SvPV_nolen(ST(2));
+    } else {
+        croak( "Usage: w->DeclareElement([ns],type)" );
+    }
     el = genxDeclareElement( w, ns, type, &st );
     if ( el && st == GENX_SUCCESS ) {
         ST( 0 ) = sv_newmortal();
@@ -365,16 +381,32 @@ genxDeclareElement( w, ns, type )
         XSRETURN_UNDEF;
     }
 
-# XXX Ensure ns is optional.
 void
-genxDeclareAttribute( w, ns, name )
+genxDeclareAttribute( w, ... )
     XML_Genx    w
-    XML_Genx_Namespace ns
-    constUtf8     name
   PREINIT:
-    genxStatus    st;
+    genxStatus         st;
     XML_Genx_Attribute at;
+    XML_Genx_Namespace ns;
+    constUtf8          name;
   PPCODE:
+    if ( items == 2 ) {
+        ns = (XML_Genx_Namespace) NULL;
+        name = (constUtf8)SvPV_nolen(ST(1));
+    } else if ( items == 3 ) {
+        /*  Bleargh, would be nice to be able to reuse typemap here */
+	if (ST(1) == &PL_sv_undef) {
+	    ns = (XML_Genx_Namespace) NULL;
+	} else if (sv_derived_from(ST(1), "XML::Genx::Namespace")) {
+	    IV tmp = SvIV((SV*)SvRV(ST(1)));
+	    ns = INT2PTR(XML_Genx_Namespace, tmp);
+	} else {
+	    croak("ns is not undef or of type XML::Genx::Namespace");
+	}
+        name = (constUtf8)SvPV_nolen(ST(2));
+    } else {
+        croak( "Usage: w->DeclareAttribute([ns],name)" );
+    }
     at = genxDeclareAttribute( w, ns, name, &st );
     if ( at && st == GENX_SUCCESS ) {
         ST( 0 ) = sv_newmortal();

@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 64;
+use Test::More tests => 66;
 
 use_ok('XML::Genx');
 
@@ -177,6 +177,9 @@ sub test_declare_element {
     is( $w->LastErrorMessage, 'Success', 'DeclareElement()' );
     isa_ok( $el, 'XML::Genx::Element' );
     can_ok( $el, qw( StartElement ) );
+
+    my $el2 = $w->DeclareElement( 'wobble' );
+    isa_ok( $el2, 'XML::Genx::Element' );
 }
 
 sub test_declare_attribute {
@@ -186,6 +189,9 @@ sub test_declare_attribute {
     is( $w->LastErrorMessage, 'Success', 'DeclareAttribute()' );
     isa_ok( $at, 'XML::Genx::Attribute' );
     can_ok( $at, qw( AddAttribute ) );
+
+    my $at2 = $w->DeclareAttribute( 'weebl' );
+    isa_ok( $at2, 'XML::Genx::Attribute' );
 }
 
 sub test_declared_in_use {
