@@ -8,6 +8,8 @@ use XML::Genx::Simple;
 
 use base 'XML::SAX::Base';
 
+our $VERSION = '0.14';
+
 sub new {
     my $class = shift;
     my $self = bless {}, $class;

@@ -18,6 +18,7 @@ provides:
     version: 0.14
   XML::Genx::SAXWriter:
     file: lib/XML/Genx/SAXWriter.pm
+    version: 0.14
   XML::Genx::Simple:
     file: lib/XML/Genx/Simple.pm
     version: 0.14
