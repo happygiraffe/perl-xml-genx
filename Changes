@@ -5,12 +5,13 @@ Revision history for XML::Genx.
 	  exception idea.  The way it was implemented meant that you
 	  didn't get the line number information about where the exception
 	  actually happened.
+	- Allude to Win32 compiler problems in README.
 	- Cope with either a glob or a reference to a glob in
           StartDocFile().
 
 0.11  Sat Feb 19 18:17:12 GMT 2005
-        - Add ScrubText() wrapping.  Thanks to A. Pagaltzis for
-          requesting this feature.
+	- Add ScrubText() wrapping.  Thanks to A. Pagaltzis for
+	  requesting this feature.
 	- Internal reorganisation to avoid global variables.
 
 0.10  Thu Feb 17 20:40:03 GMT 2005

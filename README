@@ -26,6 +26,10 @@ To install this module type the following:
    ./Build test
    ./Build install
 
+NB: If you are building under MS Windows, you *must* ensure that you use
+the same compiler as you built Perl with.  Otherwise you will see
+mysterious failures when you try to actually use XML::Genx.
+
 COPYRIGHT AND LICENCE
 
 Copyright (C) 2004 by Dominic Mitchell. All rights reserved.
