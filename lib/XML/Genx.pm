@@ -41,7 +41,8 @@ characters are correctly encoded, namespaces are handled properly and
 so on.
 
 The API is mostly a wrapper over the original C library.  Consult the
-genx documentation for the fine detail.
+genx documentation for the fine detail.  This code is based on genx
+I<beta5>.
 
 =head1 METHODS
 
@@ -92,6 +93,81 @@ Output STRING as an XML comment.
 
 Output a processing instruction, with target TARGET and STRING as the
 body.
+
+=back
+
+=head1 LIMITATIONS
+
+According to the Genx manual, the things that Genx can't do include:
+
+=over 4
+
+=item *
+
+Generating output in anything but UTF8.
+
+=item *
+
+Writing namespace-oblivious XML. That is to say, you can't have an
+element or attribute named foo:bar unless foo is a prefix associated
+with some namespace.
+
+=item *
+
+Empty-element tags.
+
+=item *
+
+Writing XML or <!DOCTYPE> declarations. Of course, you could squeeze
+these into the output stream yourself before any Genx calls that
+generate output.
+
+=item *
+
+Pretty-printing. Of course, you can pretty-print yourself by putting the
+linebreaks in the right places and indenting appropriately, but Genx
+won't do it for you. Someone might want to write a pretty-printer that
+sits on top of Genx.
+
+=back
+
+=head1 TODO
+
+At the moment, only a basic subset of the available API is exposed.  I
+need to make the rest work.
+
+=over 4
+
+=item *
+
+Provide an ability to use genxStartDocSender() so that you can pass in
+code refs that get given strings.  This should be the underpinnings of a
+slightly easier interface than filehandles.
+
+=item *
+
+We need to be able to get hold of "compiled" elements, attributes and
+namespaces.  That means creating a few extra classes to hold the
+genxNamespace, genxElement, and genxAttribute structs.  Also, I need to
+expose the corresponding genxDeclare* methods as constructors for them.
+
+The interface for genxDeclare* returns both a new struct and a status
+code.  I'm tempted to let it return a single value, which will be an
+object or undef.  If it's undef, you can call LastErrorMessage() to find
+out what happened.
+
+=item *
+
+Make the constants available in Perl.
+
+=item *
+
+Expose the utility routines.  Possibly.  I'm not sure what they'd be
+needed for.
+
+=item *
+
+Maybe make genx use Perl's malloc?
 
 =back
 
