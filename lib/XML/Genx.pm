@@ -87,6 +87,11 @@ Finishes writing to the output stream.
 Starts an element LOCALNAME, in NAMESPACE.  If NAMESPACE is not
 present or undef, or an empty string, no namespace is used.
 
+=item AddAttributeLiteral ( [NAMESPACE], LOCALNAME, VALUE )
+
+Adds an attribute LOCALNAME, with contents VALUE.  If NAMESPACE is not
+present or undef, or an empty string, no namespace is used.
+
 =item EndElement ( )
 
 Output a closing tag for the currently open element.

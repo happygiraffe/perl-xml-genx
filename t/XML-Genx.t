@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 61;
+use Test::More tests => 64;
 
 use_ok('XML::Genx');
 
@@ -41,19 +41,19 @@ is(
 
 is(
     test_empty_namespace(),
-    '<foo></foo>',
+    '<foo bar="baz"></foo>',
     'test_empty_namespace() output',
 );
 
 is(
     test_undef_namespace(),
-    '<foo></foo>',
+    '<foo bar="baz"></foo>',
     'test_undef_namespace() output',
 );
 
 is(
     test_no_namespace(),
-    '<foo></foo>',
+    '<foo bar="baz"></foo>',
     'test_no_namespace() output',
 );
 
@@ -103,12 +103,16 @@ sub test_basics {
 }
 
 sub test_empty_namespace {
-    my $w = XML::Genx->new();
+    my $w  = XML::Genx->new();
     my $fh = tempfile();
     is( $w->StartDocFile( $fh ), 0, 'StartDocFile(fh)' );
     is(
         $w->StartElementLiteral( '', 'foo' ), 0,
         'StartElementLiteral("",foo)'
+    );
+    is(
+        $w->AddAttributeLiteral( '', bar => 'baz' ), 0,
+        'AddAttributeLiteral()'
     );
     is( $w->EndElement,  0, 'EndElement()' );
     is( $w->EndDocument, 0, 'EndDocument()' );
@@ -116,12 +120,16 @@ sub test_empty_namespace {
 }
 
 sub test_undef_namespace {
-    my $w = XML::Genx->new();
+    my $w  = XML::Genx->new();
     my $fh = tempfile();
     is( $w->StartDocFile( $fh ), 0, 'StartDocFile(fh)' );
     is(
         $w->StartElementLiteral( undef, 'foo' ), 0,
         'StartElementLiteral(undef,foo)'
+    );
+    is(
+        $w->AddAttributeLiteral( undef, bar => 'baz' ), 0,
+        'AddAttributeLiteral()'
     );
     is( $w->EndElement,  0, 'EndElement()' );
     is( $w->EndDocument, 0, 'EndDocument()' );
@@ -129,13 +137,11 @@ sub test_undef_namespace {
 }
 
 sub test_no_namespace {
-    my $w = XML::Genx->new();
+    my $w  = XML::Genx->new();
     my $fh = tempfile();
     is( $w->StartDocFile( $fh ), 0, 'StartDocFile(fh)' );
-    is(
-        $w->StartElementLiteral( 'foo' ), 0,
-        'StartElementLiteral(foo)'
-    );
+    is( $w->StartElementLiteral( 'foo' ), 0, 'StartElementLiteral(foo)' );
+    is( $w->AddAttributeLiteral( bar => 'baz' ), 0, 'AddAttributeLiteral()' );
     is( $w->EndElement,  0, 'EndElement()' );
     is( $w->EndDocument, 0, 'EndDocument()' );
     return fh_contents( $fh );

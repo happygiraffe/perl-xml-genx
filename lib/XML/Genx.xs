@@ -228,22 +228,29 @@ genxStartElementLiteral( w, ... )
 
 # Same issue with xmlns here as in genxStartElementLiteral().
 genxStatus
-genxAddAttributeLiteral( w, xmlns_sv, name, value )
+genxAddAttributeLiteral( w, ... )
     XML_Genx w
-    SV*        xmlns_sv
-    constUtf8  name
-    constUtf8  value
   PREINIT:
     constUtf8  xmlns;
+    constUtf8  name;
+    constUtf8  value;
   INIT:
-    /* Undef means "no namespace". */
-    if ( xmlns_sv == &PL_sv_undef ) {
+    if ( items == 3 ) {
         xmlns = NULL;
+        name  = (constUtf8)SvPV_nolen(ST(1));
+        value = (constUtf8)SvPV_nolen(ST(2));
+    } else if ( items == 4 ) {
+        /* undef or empty string means "no namespace" */
+        if ( ST(1) == &PL_sv_undef )
+            xmlns = NULL;
+        else if ( SvCUR(ST(1)) == 0 )
+            xmlns = NULL;
+        else
+            xmlns = (constUtf8)SvPV_nolen(ST(1));
+        name  = (constUtf8)SvPV_nolen(ST(2));
+        value = (constUtf8)SvPV_nolen(ST(3));
     } else {
-        xmlns = (constUtf8)SvPV_nolen(xmlns_sv);
-       /* Empty string means "no namespace" too. */
-       if ( *xmlns == '\0' )
-           xmlns = NULL;
+        croak( "Usage: w->AddAttributeLiteral([xmlns],name,value)" );
     }
   CODE:
     RETVAL = genxAddAttributeLiteral( w, xmlns, name, value );
