@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 35;
+use Test::More tests => 43;
 
 use_ok('XML::Genx');
 
@@ -23,6 +23,8 @@ can_ok( $w, qw(
     Comment
     PI
     DeclareNamespace
+    DeclareElement
+    DeclareAttribute
 ) );
 
 # Subtly different to VERSION()...
@@ -52,6 +54,12 @@ test_bad_filehandle();
 test_declare_namespace();
 test_declare_element();
 test_declare_attribute();
+
+is(
+    test_declared_in_use(),
+    '<foo:bar xmlns:foo="urn:foo" foo:baz="quux"></foo:bar>',
+    'test_declared_in_use() output',
+);
 
 sub test_basics {
     my $w = XML::Genx->new();
@@ -128,14 +136,31 @@ sub test_declare_element {
     my $el = $w->DeclareElement( $ns, 'wibble' );
     is( $w->LastErrorMessage, 'Success', 'DeclareElement()' );
     isa_ok( $el, 'XML::Genx::Element' );
+    can_ok( $el, qw( StartElement ) );
 }
 
 sub test_declare_attribute {
     my $w = XML::Genx->new();
     my $ns = $w->DeclareNamespace( 'urn:foo', 'foo' );
-    my $el = $w->DeclareAttribute( $ns, 'wobble' );
+    my $at = $w->DeclareAttribute( $ns, 'wobble' );
     is( $w->LastErrorMessage, 'Success', 'DeclareAttribute()' );
-    isa_ok( $el, 'XML::Genx::Attribute' );
+    isa_ok( $at, 'XML::Genx::Attribute' );
+    can_ok( $at, qw( AddAttribute ) );
+}
+
+sub test_declared_in_use {
+    my $w = XML::Genx->new();
+    my $ns = $w->DeclareNamespace( 'urn:foo', 'foo' );
+    my $el = $w->DeclareElement( $ns, 'bar' );
+    my $at = $w->DeclareAttribute( $ns, 'baz' );
+    my $fh = tempfile();
+
+    is( $w->StartDocFile( $fh ), 0, 'StartDocFile()' );
+    is( $el->StartElement(), 0, 'StartElement()' );
+    is( $at->AddAttribute( 'quux' ), 0, 'AddAttribute()' );
+    is( $w->EndElement(), 0, 'EndElement()' );
+    is( $w->EndDocument(), 0, 'EndDocument()' );
+    return fh_contents( $fh );
 }
 
 sub fh_contents {

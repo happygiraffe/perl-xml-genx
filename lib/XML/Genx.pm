@@ -173,18 +173,6 @@ slightly easier interface than filehandles.
 
 =item *
 
-We need to be able to get hold of "compiled" elements, attributes and
-namespaces.  That means creating a few extra classes to hold the
-genxNamespace, genxElement, and genxAttribute structs.  Also, I need to
-expose the corresponding genxDeclare* methods as constructors for them.
-
-The interface for genxDeclare* returns both a new struct and a status
-code.  I'm tempted to let it return a single value, which will be an
-object or undef.  If it's undef, you can call LastErrorMessage() to find
-out what happened.
-
-=item *
-
 Make the constants available in Perl.
 
 =item *
@@ -201,6 +189,10 @@ Maybe make genx use Perl's malloc?
 Make the interface more Perlish where possible.  I really like the way
 that the Ruby interface uses blocks, but I don't think it'd be as
 practical in Perl...
+
+=item *
+
+Clean up the XS a little; there's a lot of cut'n'paste in there.
 
 =back
 

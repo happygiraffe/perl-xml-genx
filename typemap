@@ -7,6 +7,8 @@
 
 genxWriter	T_GENXWRITER
 genxNamespace	T_GENXNAMESPACE
+genxElement	T_GENXELEMENT
+genxAttribute	T_GENXATTRIBUTE
 genxStatus	T_IV
 utf8		T_PV
 constUtf8	T_PV
@@ -27,4 +29,18 @@ T_GENXNAMESPACE
 	    $var = INT2PTR($type, tmp);
 	} else {
 	    Perl_croak(aTHX_ \"$var is not of type XML::Genx::Namespace\");
+	}
+T_GENXELEMENT
+	if (sv_derived_from($arg, \"XML::Genx::Element\")) {
+	    IV tmp = SvIV((SV*)SvRV($arg));
+	    $var = INT2PTR($type, tmp);
+	} else {
+	    Perl_croak(aTHX_ \"$var is not of type XML::Genx::Element\");
+	}
+T_GENXATTRIBUTE
+	if (sv_derived_from($arg, \"XML::Genx::Attribute\")) {
+	    IV tmp = SvIV((SV*)SvRV($arg));
+	    $var = INT2PTR($type, tmp);
+	} else {
+	    Perl_croak(aTHX_ \"$var is not of type XML::Genx::Attribute\");
 	}

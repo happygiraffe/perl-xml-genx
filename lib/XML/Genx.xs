@@ -211,3 +211,17 @@ MODULE = XML::Genx	PACKAGE = XML::Genx::Namespace	PREFIX=genx
 utf8
 genxGetNamespacePrefix( ns )
     genxNamespace ns
+
+MODULE = XML::Genx	PACKAGE = XML::Genx::Element	PREFIX=genx
+
+genxStatus
+genxStartElement( e )
+    genxElement e
+
+MODULE = XML::Genx	PACKAGE = XML::Genx::Attribute	PREFIX=genx
+
+genxStatus
+genxAddAttribute( a, value )
+    genxAttribute a
+    constUtf8 value
+
