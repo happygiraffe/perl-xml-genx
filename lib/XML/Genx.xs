@@ -46,13 +46,14 @@ genxStatus
 genxEndDocument( w )
     genxWriter w
 
-# XXX We need to ensure that we insert a NULL if xmlns is an empty
-# string or undefined.
 genxStatus
 genxStartElementLiteral( w, xmlns, name )
     genxWriter w
     char *xmlns
     char *name
+  INIT:
+    /* Empty string means "no namespace". */
+    if ( *xmlns == '\0' ) xmlns = NULL;
 
 genxStatus
 genxEndElement( w )

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 13;
+use Test::More tests => 18;
 
 use_ok('XML::Genx');
 
@@ -29,9 +29,24 @@ is(
     'test_basics() output'
 );
 
+is(
+    test_empty_namespace(),
+    '<foo></foo>',
+    'test_empty_namespace() output',
+);
+
+is(
+    test_undef_namespace(),
+    '<foo></foo>',
+    'test_undef_namespace() output',
+);
+
 sub test_basics {
     my $fh = tempfile();
     is( $w->StartDocFile( $fh ),  0,         'StartDocFile(fh)' );
+    is( $w->EndElement,       0, 'EndElement()' );
+    is( $w->EndDocument,      0, 'EndDocument()' );
+    return fh_contents( $fh );
     is( $w->LastErrorMessage,     'Success', 'LastErrorMessage()' );
     is( $w->GetErrorMessage( 0 ), 'Success', 'GetErrorMessage(0)' );
 
@@ -42,6 +57,30 @@ sub test_basics {
     is( $w->AddText( 'bar' ), 0, 'AddText(bar)' );
     is( $w->EndElement,       0, 'EndElement()' );
     is( $w->EndDocument,      0, 'EndDocument()' );
+    return fh_contents( $fh );
+}
+
+sub test_empty_namespace {
+    my $fh = tempfile();
+    is( $w->StartDocFile( $fh ), 0, 'StartDocFile(fh)' );
+    is(
+        $w->StartElementLiteral( '', 'foo' ), 0,
+        'StartElementLiteral("",foo)'
+    );
+    is( $w->EndElement,  0, 'EndElement()' );
+    is( $w->EndDocument, 0, 'EndDocument()' );
+    return fh_contents( $fh );
+}
+
+sub test_undef_namespace {
+    my $fh = tempfile();
+    is( $w->StartDocFile( $fh ), 0, 'StartDocFile(fh)' );
+    is(
+        $w->StartElementLiteral( undef, 'foo' ), 0,
+        'StartElementLiteral(undef,foo)'
+    );
+    is( $w->EndElement,  0, 'EndElement()' );
+    is( $w->EndDocument, 0, 'EndDocument()' );
     return fh_contents( $fh );
 }
 
