@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 33;
+use Test::More tests => 35;
 
 use_ok('XML::Genx');
 
@@ -51,6 +51,7 @@ is(
 test_bad_filehandle();
 test_declare_namespace();
 test_declare_element();
+test_declare_attribute();
 
 sub test_basics {
     my $w = XML::Genx->new();
@@ -127,6 +128,14 @@ sub test_declare_element {
     my $el = $w->DeclareElement( $ns, 'wibble' );
     is( $w->LastErrorMessage, 'Success', 'DeclareElement()' );
     isa_ok( $el, 'XML::Genx::Element' );
+}
+
+sub test_declare_attribute {
+    my $w = XML::Genx->new();
+    my $ns = $w->DeclareNamespace( 'urn:foo', 'foo' );
+    my $el = $w->DeclareAttribute( $ns, 'wobble' );
+    is( $w->LastErrorMessage, 'Success', 'DeclareAttribute()' );
+    isa_ok( $el, 'XML::Genx::Attribute' );
 }
 
 sub fh_contents {
