@@ -3,7 +3,7 @@ package XML::Genx;
 use strict;
 use warnings;
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 # Use XSLoader first if possible.
 eval {
