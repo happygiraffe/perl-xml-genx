@@ -45,9 +45,6 @@ is(
 sub test_basics {
     my $fh = tempfile();
     is( $w->StartDocFile( $fh ),  0,         'StartDocFile(fh)' );
-    is( $w->EndElement,       0, 'EndElement()' );
-    is( $w->EndDocument,      0, 'EndDocument()' );
-    return fh_contents( $fh );
     is( $w->LastErrorMessage,     'Success', 'LastErrorMessage()' );
     is( $w->GetErrorMessage( 0 ), 'Success', 'GetErrorMessage(0)' );
 
