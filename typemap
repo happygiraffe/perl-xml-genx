@@ -13,7 +13,7 @@ constUtf8		T_PV
 INPUT
 T_PTROBJ_SPECIAL
 	if ($arg == &PL_sv_undef) {
-	    $var = NULL;
+	    $var = ($type) NULL;
 	} else if (sv_derived_from($arg, \"${(my $ntt=$ntype)=~s/_/::/g;\$ntt}\")) {
 	    IV tmp = SvIV((SV*)SvRV($arg));
 	    $var = ($type) tmp;
