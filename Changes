@@ -1,5 +1,10 @@
 Revision history for XML::Genx.
 
+0.14  Wed Mar 16 22:12:34 GMT 2005
+	- Correctly test for undef values.
+	- Implement XML::Genx::SAXWriter, to enable genx to be used at
+	  the end of a SAX chain.
+
 0.13  Wed Mar  2 09:52:44 GMT 2005
 	- [INCOMPATIBLE CHANGE] Return genx's status directly instead of
           storing it after the last error.  Now it can only be relied
