@@ -109,8 +109,13 @@ significantly quicker.  Many thanks to A. Pagaltzis for suggesting it.
 
 =item GetDocString ( )
 
-Returns the string from the current writer object.  B<NB>: This is only
-guaranteed to be well-formed XML after you have called EndDocument().
+Returns the string from the current writer object.  
+
+B<NB>: This is only guaranteed to be well-formed XML after you have
+called EndDocument().
+
+B<NB>: This will only produce sensible output if you've called
+StartDocString() previously.
 
 =item Element ( NAME, TEXT, [ATTRS] )
 
