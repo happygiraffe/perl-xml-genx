@@ -58,8 +58,12 @@ initSelfUserData( genxWriter w )
     return self;
 }
 
-/* DEBUG */
+/*
+ * DEBUG -- uncomment to use.  This is just a convenience function for
+ * seeing what's inside an object.
+ */
 
+#ifdef notdef
 static void
 dump_self( genxWriter w, const char *msg )
 {
@@ -94,6 +98,7 @@ dump_self( genxWriter w, const char *msg )
     FREETMPS;
     LEAVE;
 }
+#endif
 
 static genxStatus
 sender_write( void *userData, constUtf8 s )
