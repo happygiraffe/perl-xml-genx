@@ -1,0 +1,21 @@
+# @(#) $Id$
+
+# NB: Because xsubpp always does s/OBJ$/REF/ on your type name (when
+# your method is called DESTROY), it's a really bad idea to make the
+# type name end in "OBJ".  Apart from the diddling with the class
+# name, this is otherwise identical to T_PTROBJ.
+
+genxWriter	T_GENXWRITER
+genxStatus	T_IV
+constUtf8       T_PV
+
+#########################################################################
+
+INPUT
+T_GENXWRITER
+	if (sv_derived_from($arg, \"XML::Genx\")) {
+	    IV tmp = SvIV((SV*)SvRV($arg));
+	    $var = INT2PTR($type, tmp);
+	} else {
+	    Perl_croak(aTHX_ \"$var is not of type XML::Genx\");
+	}

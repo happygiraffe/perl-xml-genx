@@ -1,0 +1,33 @@
+XML-Genx version 0.01
+=====================
+
+Genx is a software library written in the C programming language. You
+can use it to generate XML output, suitable for saving into a file or
+sending in a message to another computer program. Genx does several
+things at once:
+
+    * Takes care of escaping XML's special characters for you.
+    * Keeps you from generating text which isn't well-formed.
+    * Generates namespace prefixes so you don't have to.
+    * Produces documents which are Canonical XML, suitable for use
+      with digital-signature technology.
+    * Tries to do all this efficiently.
+
+XML::Genx is a wrapper around Genx to let it be used from Perl.
+
+INSTALLATION
+
+To install this module type the following:
+
+   perl Build.PL
+   ./Build
+   ./Build test
+   ./Build install
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2004 by Dominic Mitchell
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.8.5 or,
+at your option, any later version of Perl 5 you may have available.

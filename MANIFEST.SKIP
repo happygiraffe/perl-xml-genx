@@ -1,0 +1,27 @@
+# Version control files and dirs.
+\bRCS\b
+\bCVS\b
+,v$
+\B\.svn\b
+
+# Makemaker generated files and dirs.
+^MANIFEST\.
+^Makefile$
+^blib/
+^MakeMaker-\d
+
+# Temp, old and emacs backup files.
+~$
+\.old$
+^#.*#$
+^\.#
+
+# Module::Build artifacts.
+^Build$
+^_build/
+
+# C compiler output.
+\.o$
+
+# xsubpp creations.
+^lib/XML/Genx.(c|bs)$
