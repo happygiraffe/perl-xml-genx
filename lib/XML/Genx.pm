@@ -182,6 +182,12 @@ needed for.
 
 Maybe make genx use Perl's malloc?
 
+=item *
+
+Make the interface more Perlish where possible.  I really like the way
+that the Ruby interface uses blocks, but I don't think it'd be as
+practical in Perl...
+
 =back
 
 =head1 SEE ALSO
