@@ -621,7 +621,7 @@ genxAddNamespace(ns, ...);
         croak( "Usage: ns->AddNamespace([prefix])" );
     RETVAL = genxAddNamespace( ns, prefix );
   POSTCALL:
-    croak_on_genx_error( NULL, RETVAL );
+    croak_on_genx_error( genxGetNamespaceWriter( ns ), RETVAL );
   OUTPUT:
     RETVAL
 
@@ -631,7 +631,7 @@ genxStatus
 genxStartElement( e )
     XML_Genx_Element e
   POSTCALL:
-    croak_on_genx_error( NULL, RETVAL );
+    croak_on_genx_error( genxGetElementWriter( e ), RETVAL );
 
 MODULE = XML::Genx	PACKAGE = XML::Genx::Attribute	PREFIX=genx
 
@@ -640,7 +640,7 @@ genxAddAttribute( a, value )
     XML_Genx_Attribute a
     constUtf8 value
   POSTCALL:
-      croak_on_genx_error( NULL, RETVAL );
+      croak_on_genx_error( genxGetAttributeWriter( a ), RETVAL );
 
 MODULE = XML::Genx	PACKAGE = XML::Genx::Constants
 

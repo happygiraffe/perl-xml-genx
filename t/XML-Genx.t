@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 92;
+use Test::More tests => 95;
 
 BEGIN {
     use_ok( 'XML::Genx' );
@@ -296,30 +296,32 @@ sub test_die_on_error {
     # This is the new way to determine more exactly what happened.
     cmp_ok( $w->LastErrorCode, '==', 8, 'LastErrorCode() after an exception.' );
 
-    # The objects that we create are special cases that need testing
-    # for die() too...  Unfortunately, they really do have nowhere to
-    # store the status code so we can't test for that as well. :(
-
+    $w = XML::Genx->new;        # Clear error status.
     eval {
         my $ns = $w->DeclareNamespace( 'urn:foo', 'foo' );
         isa_ok( $ns, 'XML::Genx::Namespace' );
         $ns->AddNamespace();
     };
     like( $@, qr/^Call out of sequence/, 'ns->AddNamespace() sequence error' );
+    cmp_ok( $w->LastErrorCode, '==', 8, 'LastErrorCode() after an exception.' );
 
+    $w = XML::Genx->new;        # Clear error status.
     eval {
         my $el = $w->DeclareElement( 'foo' );
         isa_ok( $el, 'XML::Genx::Element' );
         $el->StartElement();
     };
     like( $@, qr/^Call out of sequence/, 'el->StartElement() sequence error' );
+    cmp_ok( $w->LastErrorCode, '==', 8, 'LastErrorCode() after an exception.' );
 
+    $w = XML::Genx->new;        # Clear error status.
     eval {
         my $at = $w->DeclareAttribute( 'foo' );
         isa_ok( $at, 'XML::Genx::Attribute' );
         $at->AddAttribute( 'bar' );
     };
     like( $@, qr/^Call out of sequence/, 'at->AddAttribute() sequence error' );
+    cmp_ok( $w->LastErrorCode, '==', 8, 'LastErrorCode() after an exception.' );
 
 }
 
