@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name: XML-Genx
-version: 0.07
+version: 0.08
 author:
   - Dominic Mitchell, E<lt>cpan@happygiraffe.netE<gt>
 abstract: Simple, correct XML writer
