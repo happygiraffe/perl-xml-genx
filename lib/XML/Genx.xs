@@ -31,9 +31,8 @@
 #include "genx.h"
 
 /* 
- * xsubpp will automatically change a double underscore into a double
- * colon meaning that we get the correct class names for free from the
- * standard typemap file.
+ * We use a typemap to change the underscore into a double colon.
+ * This makes it easier to get things of the right class used.
  */
 
 typedef genxWriter    XML_Genx;
