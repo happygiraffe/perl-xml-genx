@@ -4,7 +4,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 9;
 
 use_ok( 'XML::Genx::Simple' );
 
@@ -39,5 +39,10 @@ eval {
 is( $@, '', 'That went well too' );
 is( $w->GetDocString, '<foo>bar</foo>', 'StartDocString()' );
 is( $warn, undef, 'StartDocString() no warnings' );
+
+#---------------------------------------------------------------------
+
+my $w2 = XML::Genx::Simple->new();
+is( $w2->GetDocString, undef, 'GetDocString() returns undef before use' );
 
 # vim: set ai et sw=4 syntax=perl :

@@ -135,10 +135,12 @@ static genxSender sender = {
 static genxStatus
 string_sender_write( void *userData, constUtf8 s )
 {
-    SV *str = (SV *)userData;
+    HV *self = (HV *)userData;
+    SV **svp;
     ENTER;
     SAVETMPS;
-    sv_catpv( str, s );
+    if ((svp = hv_fetch( self, "string", 6, 1 )))
+        sv_catpv( *svp, s );
     FREETMPS;
     LEAVE;
     return GENX_SUCCESS;
@@ -147,10 +149,12 @@ string_sender_write( void *userData, constUtf8 s )
 static genxStatus
 string_sender_write_bounded( void *userData, constUtf8 start, constUtf8 end )
 {
-    SV *str = (SV *)userData;
+    HV *self = (HV *)userData;
+    SV **svp;
     ENTER;
     SAVETMPS;
-    sv_catpvn( str, start, end - start );
+    if ((svp = hv_fetch( self, "string", 6, 1 )))
+        sv_catpvn( *svp, start, end - start );
     FREETMPS;
     LEAVE;
     return GENX_SUCCESS;
@@ -736,21 +740,31 @@ genxStatus
 genxStartDocString( w )
     XML_Genx w
   PREINIT:
-    SV *str = newSVpv("", 0);
+    HV *self = newHV();
   CODE:
-    /* genx guarantees that this will be so */
-    SvUTF8_on( str );
-    genxSetUserData( w, (void *)str );
+    (void)hv_store(self, "string", 6, newSVpv("", 0), 0);
+    genxSetUserData( w, (void *)self );
     RETVAL = genxStartDocSender( w, &string_sender );
   OUTPUT:
     RETVAL
 
-# XXX There is no way to guarantee that this will be a valid SV.  It's
-# only going to be valid if you called StartDocString first.
 SV *
 genxGetDocString( w )
     XML_Genx w
+  PREINIT:
+    HV *self;
+    SV **svp;
   CODE:
-    RETVAL = (SV *)genxGetUserData( w );
+    self = (HV *)genxGetUserData( w );
+    /* 
+     * Fetch the string out of ourselves.  Ensure that it gets sent back
+     * as UTF-8, which genx guarantees for us.
+     */
+    if ((svp = hv_fetch(self, "string", 6, 0))) {
+        SvUTF8_on( *svp );
+        RETVAL = *svp;
+    } else {
+        RETVAL = &PL_sv_undef;
+    }
   OUTPUT:
     RETVAL
