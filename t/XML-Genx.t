@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 88;
+use Test::More tests => 90;
 
 BEGIN {
     use_ok( 'XML::Genx' );
@@ -92,6 +92,7 @@ is(
 test_die_on_error();
 test_constants();
 test_fh_scope();
+test_scrubtext();
 
 sub test_basics {
     my $w = XML::Genx->new();
@@ -336,6 +337,12 @@ sub test_fh_scope {
     # We don't actually care what's been written at this point.  Just
     # that it *has* been written without blowing up.
     return;
+}
+
+sub test_scrubtext {
+    my $w = XML::Genx->new();
+    is( $w->ScrubText( "abc" ),     "abc", 'ScrubText() all good' );
+    is( $w->ScrubText( "abc\x01" ), "abc", 'ScrubText() skips non-xml chars' );
 }
 
 sub fh_contents {

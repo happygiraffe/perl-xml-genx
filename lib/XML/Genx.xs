@@ -252,7 +252,16 @@ new( klass )
 void
 DESTROY( w )
     XML_Genx w
+  PREINIT:
+    HV *self;
   CODE:
+    self = (HV *)genxGetUserData( w );
+    /* 
+     * Ensure that Perl can clean up this hash now that nothing's
+     * referencing it.
+     */
+    if ( self != NULL )
+        SvREFCNT_dec( self );
     genxDispose( w );
 
 genxStatus
@@ -513,6 +522,18 @@ genxDeclareAttribute( w, ... )
     } else {
         XSRETURN_UNDEF;
     }
+
+SV *
+genxScrubText( w, in )
+    XML_Genx w
+    SV *in
+  CODE:
+    RETVAL = newSVsv( in );
+    (void)genxScrubText( w, SvPV_nolen( in ), SvPV_nolen( RETVAL ) );
+    /* Fix up the new length. */
+    SvCUR_set( RETVAL, strlen( SvPV_nolen( RETVAL ) ) );
+  OUTPUT:
+    RETVAL
 
 MODULE = XML::Genx	PACKAGE = XML::Genx::Namespace	PREFIX=genx
 

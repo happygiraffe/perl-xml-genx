@@ -103,6 +103,12 @@ Returns the string value of the last error.
 
 Given a genxStatus code, return the equivalent string.
 
+=item ScrubText ( STRING )
+
+Returns a new version of STRING with prohibited characters removed.
+Prohibited characters includes non UTF-8 byte sequences and characters
+which are not allowed in XML 1.0.
+
 =item AddText ( STRING )
 
 Output STRING.  STRING must be valid UTF-8.
@@ -234,10 +240,6 @@ sits on top of Genx.
 =item *
 
 Write a SAX output filter using XML::Genx.
-
-=item *
-
-Clean up the XS a little; there's a lot of cut'n'paste in there.
 
 =back
 
