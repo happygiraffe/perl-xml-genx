@@ -252,7 +252,16 @@ new( klass )
 void
 DESTROY( w )
     XML_Genx w
+  PREINIT:
+    HV *self;
   CODE:
+    self = (HV *)genxGetUserData( w );
+    /* 
+     * Ensure that Perl can clean up this hash now that nothing's
+     * referencing it.
+     */
+    if ( self != NULL )
+        SvREFCNT_dec( self );
     genxDispose( w );
 
 genxStatus
