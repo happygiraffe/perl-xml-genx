@@ -10,8 +10,11 @@ requires:
 provides:
   XML::Genx:
     file: lib/XML/Genx.pm
-    version: 0.07
+    version: 0.08
+  XML::Genx::Constants:
+    file: lib/XML/Genx/Constants.pm
+    version: 0.08
   XML::Genx::Simple:
     file: lib/XML/Genx/Simple.pm
-    version: 0.07
+    version: 0.08
 generated_by: Module::Build version 0.2605
