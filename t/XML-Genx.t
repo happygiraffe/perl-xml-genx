@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 56;
+use Test::More tests => 61;
 
 use_ok('XML::Genx');
 
@@ -49,6 +49,12 @@ is(
     test_undef_namespace(),
     '<foo></foo>',
     'test_undef_namespace() output',
+);
+
+is(
+    test_no_namespace(),
+    '<foo></foo>',
+    'test_no_namespace() output',
 );
 
 test_bad_filehandle();
@@ -116,6 +122,19 @@ sub test_undef_namespace {
     is(
         $w->StartElementLiteral( undef, 'foo' ), 0,
         'StartElementLiteral(undef,foo)'
+    );
+    is( $w->EndElement,  0, 'EndElement()' );
+    is( $w->EndDocument, 0, 'EndDocument()' );
+    return fh_contents( $fh );
+}
+
+sub test_no_namespace {
+    my $w = XML::Genx->new();
+    my $fh = tempfile();
+    is( $w->StartDocFile( $fh ), 0, 'StartDocFile(fh)' );
+    is(
+        $w->StartElementLiteral( 'foo' ), 0,
+        'StartElementLiteral(foo)'
     );
     is( $w->EndElement,  0, 'EndElement()' );
     is( $w->EndDocument, 0, 'EndDocument()' );

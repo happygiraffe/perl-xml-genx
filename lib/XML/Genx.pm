@@ -30,7 +30,7 @@ XML::Genx - Simple, correct XML writer
   eval {
       # <foo>bar</foo>
       $w->StartDocFile( *STDOUT );
-      $w->StartElementLiteral( undef, 'foo' );
+      $w->StartElementLiteral( 'foo' );
       $w->AddText( 'bar' );
       $w->EndElement;
       $w->EndDocument;
@@ -82,10 +82,10 @@ The string passed to CALLBACK will always be UTF-8.
 
 Finishes writing to the output stream.
 
-=item StartElementLiteral ( NAMESPACE, LOCALNAME )
+=item StartElementLiteral ( [NAMESPACE], LOCALNAME )
 
-Starts an element LOCALNAME, in NAMESPACE.  If NAMESPACE is undef, no
-namespace is used.
+Starts an element LOCALNAME, in NAMESPACE.  If NAMESPACE is not
+present or undef, or an empty string, no namespace is used.
 
 =item EndElement ( )
 

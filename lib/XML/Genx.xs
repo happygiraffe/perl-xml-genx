@@ -198,21 +198,26 @@ genxEndDocument( w )
 # Instead, we have to take an SV and wing it ourselves.  That's a
 # *lot* more work...
 genxStatus
-genxStartElementLiteral( w, xmlns_sv, name )
+genxStartElementLiteral( w, ... )
     XML_Genx w
-    SV*        xmlns_sv
-    constUtf8  name
   PREINIT:
     constUtf8  xmlns;
+    constUtf8  name;
   INIT:
-    /* Undef means "no namespace". */
-    if ( xmlns_sv == &PL_sv_undef ) {
+    if ( items == 2 ) {
         xmlns = NULL;
+        name  = (constUtf8)SvPV_nolen(ST(1));
+    } else if ( items == 3 ) {
+        /* undef or empty string means "no namespace" */
+        if ( ST(1) == &PL_sv_undef )
+            xmlns = NULL;
+        else if ( SvCUR(ST(1)) == 0 )
+            xmlns = NULL;
+        else
+            xmlns = (constUtf8)SvPV_nolen(ST(1));
+        name  = (constUtf8)SvPV_nolen(ST(2));
     } else {
-        xmlns = (constUtf8)SvPV_nolen(xmlns_sv);
-       /* Empty string means "no namespace" too. */
-       if ( *xmlns == '\0' )
-           xmlns = NULL;
+        croak( "Usage: w->StartElementLiteral([xmlns],name)" );
     }
   CODE:
     RETVAL = genxStartElementLiteral( w, xmlns, name );
