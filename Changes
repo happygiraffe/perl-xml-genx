@@ -1,6 +1,7 @@
 Revision history for XML::Genx.
 
 0.07  Sat Dec  4 19:19:59 GMT 2004
+	- Make Declare*() die as well.
 	- Make the sub-objects die correctly as well.
 
 0.06  Fri Dec  3 14:10:35 GMT 2004

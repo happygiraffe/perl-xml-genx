@@ -354,14 +354,11 @@ genxDeclareNamespace( w, uri, ... )
         croak( "usage: w->DeclareNamespace(uri,[defaultPrefix])" );
   PPCODE:
     ns = genxDeclareNamespace( w, uri, prefix, &st );
-    if ( ns && st == GENX_SUCCESS ) {
-        ST( 0 ) = sv_newmortal();
-        sv_setref_pv( ST(0), "XML::Genx::Namespace", (void*)ns );
-        SvREADONLY_on(SvRV(ST(0)));
-        XSRETURN( 1 );
-    } else {
-        XSRETURN_UNDEF;
-    }
+    croak_on_genx_error( w, st );
+    ST( 0 ) = sv_newmortal();
+    sv_setref_pv( ST(0), "XML::Genx::Namespace", (void*)ns );
+    SvREADONLY_on(SvRV(ST(0)));
+    XSRETURN( 1 );
 
 void
 genxDeclareElement( w, ... )
@@ -390,14 +387,11 @@ genxDeclareElement( w, ... )
         croak( "Usage: w->DeclareElement([ns],type)" );
     }
     el = genxDeclareElement( w, ns, type, &st );
-    if ( el && st == GENX_SUCCESS ) {
-        ST( 0 ) = sv_newmortal();
-        sv_setref_pv( ST(0), "XML::Genx::Element", (void*)el );
-        SvREADONLY_on(SvRV(ST(0)));
-        XSRETURN( 1 );
-    } else {
-        XSRETURN_UNDEF;
-    }
+    croak_on_genx_error( w, st );
+    ST( 0 ) = sv_newmortal();
+    sv_setref_pv( ST(0), "XML::Genx::Element", (void*)el );
+    SvREADONLY_on(SvRV(ST(0)));
+    XSRETURN( 1 );
 
 void
 genxDeclareAttribute( w, ... )
