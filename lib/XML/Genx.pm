@@ -77,6 +77,9 @@ string.
 
 The string passed to CALLBACK will always be UTF-8.
 
+B<NB>: If you just want to append to a string, have a look at
+L<XML::Genx::Simple/StartDocString>.
+
 =item EndDocument ( )
 
 Finishes writing to the output stream.
@@ -244,6 +247,8 @@ Write a SAX output filter using XML::Genx.
 =back
 
 =head1 SEE ALSO
+
+L<XML::Genx::Simple>
 
 L<http://www.tbray.org/ongoing/When/200x/2004/02/20/GenxStatus>
 
