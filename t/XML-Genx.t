@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 66;
+use Test::More tests => 73;
 
 use_ok('XML::Genx');
 
@@ -72,6 +72,12 @@ is(
     test_declared_no_namespace(),
     '<bar baz="quux"></bar>',
     'test_declared_no_namespace() output',
+);
+
+is(
+    test_declared_with_namespace(),
+    '<el xmlns="http://example.com/#ns" at="val"></el>',
+    'test_declared_with_namespace() output',
 );
 
 is(
@@ -165,7 +171,7 @@ sub test_declare_namespace {
     my $ns = $w->DeclareNamespace( 'urn:foo', 'foo' );
     is( $w->LastErrorMessage, 'Success', 'DeclareNamespace()' );
     isa_ok( $ns, 'XML::Genx::Namespace' );
-    can_ok( $ns, qw( GetNamespacePrefix ) );
+    can_ok( $ns, qw( GetNamespacePrefix AddNamespace ) );
     # This will return undef until we've actually written some XML...
     is( $ns->GetNamespacePrefix, undef, 'GetNamespacePrefix()' );
 }
@@ -219,6 +225,29 @@ sub test_declared_no_namespace {
     is( $el->StartElement(), 0, 'StartElement()' );
     is( $at->AddAttribute( 'quux' ), 0, 'AddAttribute()' );
     is( $w->EndElement(), 0, 'EndElement()' );
+    is( $w->EndDocument(), 0, 'EndDocument()' );
+    return fh_contents( $fh );
+}
+
+sub test_declared_with_namespace {
+    my $w = XML::Genx->new();
+
+    # Default prefix for this namespace is "foo".
+    my $nsurl = 'http://example.com/#ns';
+    my $ns    = $w->DeclareNamespace( $nsurl, 'foo' );
+    my $fh    = tempfile();
+
+    is( $w->StartDocFile( $fh ), 0, 'StartDocFile()' );
+    is( $w->StartElementLiteral( $nsurl, 'el' ), 0, 'StartElement(el)' );
+
+    # Override and attempt to make it the default namespace.
+    is( $ns->AddNamespace( '' ), 0, 'AddNamespace("")' )
+        or diag $w->LastErrorMessage;
+    is(
+        $w->AddAttributeLiteral( at => 'val' ), 0,
+        'AddAttributeLiteral(at,val)'
+    );
+    is( $w->EndElement(),  0, 'EndElement()' );
     is( $w->EndDocument(), 0, 'EndDocument()' );
     return fh_contents( $fh );
 }

@@ -132,7 +132,7 @@ Return the version number of the Genx library in use.
 
 =item DeclareNamespace ( URI, PREFIX )
 
-Returns a new namespace object.  The resulting object has one method
+Returns a new namespace object.  The resulting object has two methods
 defined on it.
 
 =over 4
@@ -140,6 +140,10 @@ defined on it.
 =item GetNamespacePrefix ( )
 
 Returns the current prefix in scope for this namespace.
+
+=item AddNamespace ( [PREFIX] )
+
+Adds the namespace into the document, optionally with PREFIX.
 
 =back
 

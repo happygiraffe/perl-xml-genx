@@ -434,6 +434,23 @@ utf8
 genxGetNamespacePrefix( ns )
     XML_Genx_Namespace ns
 
+# XXX Need to die on failure...
+genxStatus
+genxAddNamespace(ns, ...);
+    XML_Genx_Namespace ns
+  PREINIT:
+    utf8 prefix;
+  CODE:
+    if ( items == 1 )
+        prefix = NULL;
+    else if ( items == 2 )
+        prefix = (utf8)SvPV_nolen(ST(1));
+    else
+        croak( "Usage: ns->AddNamespace([prefix])" );
+    RETVAL = genxAddNamespace( ns, prefix );
+  OUTPUT:
+    RETVAL
+
 MODULE = XML::Genx	PACKAGE = XML::Genx::Element	PREFIX=genx
 
 # XXX Need to die on failure...
