@@ -204,10 +204,9 @@ genxEndDocument( w )
   POSTCALL:
     if ( RETVAL != GENX_SUCCESS ) croak( genxLastErrorMessage( w ) );
 
-# Because xmlns can be NULL, we need to allow undef here.  However,
-# the typemap for "char*" throws a warning if you pass that in.
-# Instead, we have to take an SV and wing it ourselves.  That's a
-# *lot* more work...
+# Take a variable length list so that we can make the namespace
+# parameter optional.  Even when present, it will only be used if it's
+# a true value.
 genxStatus
 genxStartElementLiteral( w, ... )
     XML_Genx w
@@ -219,13 +218,7 @@ genxStartElementLiteral( w, ... )
         xmlns = NULL;
         name  = (constUtf8)SvPV_nolen(ST(1));
     } else if ( items == 3 ) {
-        /* undef or empty string means "no namespace" */
-        if ( ST(1) == &PL_sv_undef )
-            xmlns = NULL;
-        else if ( SvCUR(ST(1)) == 0 )
-            xmlns = NULL;
-        else
-            xmlns = (constUtf8)SvPV_nolen(ST(1));
+        xmlns = SvTRUE(ST(1)) ? (constUtf8)SvPV_nolen(ST(1)) : NULL;
         name  = (constUtf8)SvPV_nolen(ST(2));
     } else {
         croak( "Usage: w->StartElementLiteral([xmlns],name)" );
@@ -237,7 +230,7 @@ genxStartElementLiteral( w, ... )
   OUTPUT:
     RETVAL
 
-# Same issue with xmlns here as in genxStartElementLiteral().
+# Same design as StartElementLiteral().
 genxStatus
 genxAddAttributeLiteral( w, ... )
     XML_Genx w
@@ -251,13 +244,7 @@ genxAddAttributeLiteral( w, ... )
         name  = (constUtf8)SvPV_nolen(ST(1));
         value = (constUtf8)SvPV_nolen(ST(2));
     } else if ( items == 4 ) {
-        /* undef or empty string means "no namespace" */
-        if ( ST(1) == &PL_sv_undef )
-            xmlns = NULL;
-        else if ( SvCUR(ST(1)) == 0 )
-            xmlns = NULL;
-        else
-            xmlns = (constUtf8)SvPV_nolen(ST(1));
+        xmlns = SvTRUE(ST(1)) ? (constUtf8)SvPV_nolen(ST(1)) : NULL;
         name  = (constUtf8)SvPV_nolen(ST(2));
         value = (constUtf8)SvPV_nolen(ST(3));
     } else {
@@ -328,23 +315,23 @@ genxGetVersion( class )
   OUTPUT:
     RETVAL
 
-# Blah, blah, Need to use an SV instead of a char* in order to let
-# "undef" in properly.
+# We need to map an undef prefix to NULL.  But we want to pass an
+# empty prefix straight through as that means "default".
 void
-genxDeclareNamespace( w, uri, prefix_sv )
+genxDeclareNamespace( w, uri, ... )
     XML_Genx w
     constUtf8  uri
-    SV*        prefix_sv
   PREINIT:
     constUtf8     prefix;
     XML_Genx_Namespace ns;
     genxStatus    st;
   INIT:
-    if ( prefix_sv == &PL_sv_undef ) {
+    if ( items == 2 )
         prefix = NULL;
-    } else {
-        prefix = (constUtf8)SvPV_nolen(prefix_sv);
-    }
+    else if ( items == 3 )
+        prefix = ST(2) == &PL_sv_undef ? NULL : (constUtf8)SvPV_nolen(ST(2));
+    else
+        croak( "usage: w->DeclareNamespace(uri,[defaultPrefix])" );
   PPCODE:
     ns = genxDeclareNamespace( w, uri, prefix, &st );
     if ( ns && st == GENX_SUCCESS ) {
@@ -434,7 +421,9 @@ utf8
 genxGetNamespacePrefix( ns )
     XML_Genx_Namespace ns
 
-# XXX Need to die on failure...
+# XXX Need to die on failure...  This is harder than it seems because
+# we don't have the genxWriter object handy to call LastErrorMessage()
+# on...
 genxStatus
 genxAddNamespace(ns, ...);
     XML_Genx_Namespace ns
@@ -444,7 +433,7 @@ genxAddNamespace(ns, ...);
     if ( items == 1 )
         prefix = NULL;
     else if ( items == 2 )
-        prefix = (utf8)SvPV_nolen(ST(1));
+        prefix = ST(1) == &PL_sv_undef ? NULL : (utf8)SvPV_nolen(ST(1));
     else
         croak( "Usage: ns->AddNamespace([prefix])" );
     RETVAL = genxAddNamespace( ns, prefix );

@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 73;
+use Test::More tests => 74;
 
 use_ok('XML::Genx');
 
@@ -76,7 +76,7 @@ is(
 
 is(
     test_declared_with_namespace(),
-    '<el xmlns="http://example.com/#ns" at="val"></el>',
+    '<el xmlns="http://example.com/#ns" xmlns:g1="http://example.com/#ns2" g1:at="val"></el>',
     'test_declared_with_namespace() output',
 );
 
@@ -235,17 +235,25 @@ sub test_declared_with_namespace {
     # Default prefix for this namespace is "foo".
     my $nsurl = 'http://example.com/#ns';
     my $ns    = $w->DeclareNamespace( $nsurl, 'foo' );
-    my $fh    = tempfile();
 
+    # Ask genx to generate a default prefix here.
+    my $ns2url = 'http://example.com/#ns2';
+    my $ns2    = $w->DeclareNamespace( $ns2url );
+
+    my $fh = tempfile();
     is( $w->StartDocFile( $fh ), 0, 'StartDocFile()' );
     is( $w->StartElementLiteral( $nsurl, 'el' ), 0, 'StartElement(el)' );
 
     # Override and attempt to make it the default namespace.
     is( $ns->AddNamespace( '' ), 0, 'AddNamespace("")' )
         or diag $w->LastErrorMessage;
+
+    # Let it keep whatever prefix genx allocated.
+    is( $ns2->AddNamespace(), 0, 'AddNamespace()' )
+        or diag $w->LastErrorMessage;
     is(
-        $w->AddAttributeLiteral( at => 'val' ), 0,
-        'AddAttributeLiteral(at,val)'
+        $w->AddAttributeLiteral( $ns2url, at => 'val' ), 0,
+        'AddAttributeLiteral(ns2url,at,val)'
     );
     is( $w->EndElement(),  0, 'EndElement()' );
     is( $w->EndDocument(), 0, 'EndDocument()' );
