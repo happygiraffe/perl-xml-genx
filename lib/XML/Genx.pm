@@ -60,10 +60,10 @@ Constructor.  Returns a new L<XML::Genx> object.
 
 Starts writing output to FILEHANDLE.
 
-=item StartDocSender ( CODEREF )
+=item StartDocSender ( CALLBACK )
 
 Takes a coderef (C< sub {} >), which gets called each time that genx
-needs to output something.  The subroutine will be called with two
+needs to output something.  CALLBACK will be called with two
 arguments: the text to output and the name of the function that called
 it (one of I<write>, I<write_bounded>, or I<flush>).
 
@@ -72,6 +72,8 @@ it (one of I<write>, I<write_bounded>, or I<flush>).
 
 In the case of I<flush>, the first argument will always be an empty
 string.
+
+The string passed to CALLBACK will always be UTF-8.
 
 =item EndDocument ( )
 

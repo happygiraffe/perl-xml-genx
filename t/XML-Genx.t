@@ -193,11 +193,7 @@ sub test_declared_no_namespace {
 sub test_sender {
     my $out = '';
     my $w   = XML::Genx->new;
-    my $coderef = sub {
-        my ( $text, $how ) = @_;
-        $out .= $_[0];
-    };
-    is( $w->StartDocSender( $coderef ), 0, 'StartDocSender()' );
+    is( $w->StartDocSender( sub { $out .= $_[0] } ), 0, 'StartDocSender()' );
     is(
         $w->StartElementLiteral( undef, 'foo' ), 0,
         'StartElementLiteral(undef,foo)'

@@ -161,11 +161,24 @@ genxStartDocFile( w, fh )
       croak( "Bad filehandle" );
 
 genxStatus
-genxStartDocSender( w, coderef )
+genxStartDocSender( w, callback )
     XML_Genx w
-    CV *coderef
+    SV *callback
+  PREINIT:
+    SV *oldcallback;
   CODE:
-    genxSetUserData( w, (void *)coderef );
+    /*
+     * Based on Section 6.7.2 of "Extending and Embedding Perl".
+     * First time around, we take a copy of the SV passed in.  Next
+     * time around, we reuse the same SV, but still taking care to
+     * ensure that the ref counts are correct.
+     */
+    oldcallback = (SV *)genxGetUserData( w );
+    if ( oldcallback == NULL ) {
+        genxSetUserData( w, (void *)newSVsv( callback ) );
+    } else {
+        SvSetSV( oldcallback, callback );
+    }
     RETVAL = genxStartDocSender( w, &sender );
   OUTPUT:
     RETVAL
