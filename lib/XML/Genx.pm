@@ -241,10 +241,6 @@ sits on top of Genx.
 
 Write a SAX output filter using XML::Genx.
 
-=item *
-
-Clean up the XS a little; there's a lot of cut'n'paste in there.
-
 =back
 
 =head1 SEE ALSO
