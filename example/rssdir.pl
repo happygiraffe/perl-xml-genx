@@ -12,37 +12,35 @@ use warnings;
 
 use File::Spec::Functions qw( catfile );
 use POSIX 'strftime';
-use XML::Genx;
+use XML::Genx::Simple;
 
 my ( $base_url, $dir ) = @ARGV;
 
 die "usage: $0 base_url dir\n"
   unless $base_url && $dir;
 
-my $w     = XML::Genx->new;
-my $title = $w->DeclareElement( 'title' );
-my $link  = $w->DeclareElement( 'link' );
-my $item  = $w->DeclareElement( 'item' );
+my $w = XML::Genx::Simple->new;
 
 $w->StartDocFile( *STDOUT );
 $w->StartElementLiteral( 'rss' );
 $w->AddAttributeLiteral( version => '2.0' );
 
-element( $w, $title => "Contents of $dir" );
-element( $w, $link  => $base_url );
-element( $w, description => "A list of all the files in $dir, in date order." );
-element( $w, pubDate     => rfc822date() );
-element( $w, generator   => $0 );
+$w->Element( title       => "Contents of $dir" );
+$w->Element( link        => $base_url );
+$w->Element( description => "A list of all the files in $dir, in date order." );
+$w->Element( pubDate     => rfc822date() );
+$w->Element( generator   => $0 );
 
 my @files = get_files( $dir );
 my %mtime = map { $_ => ( stat catfile $dir, $_ )[9] } @files;
 @files = sort { $mtime{ $b } <=> $mtime{ $a } } @files;
 
+my $item = $w->DeclareElement( 'item' );
 foreach ( @files ) {
     $item->StartElement;
-    element( $w, $title, $_ );
-    element( $w, $link,  "$base_url/$_" );
-    element( $w, pubDate => rfc822date( $mtime{ $_ } ) );
+    $w->Element( title   => $_ );
+    $w->Element( link    =>  "$base_url/$_" );
+    $w->Element( pubDate => rfc822date( $mtime{ $_ } ) );
     $w->EndElement;
 }
 
@@ -70,17 +68,4 @@ sub get_files {
 sub rfc822date {
     my $when = shift || time;
     return strftime "%a, %m %b %Y %H:%M:%S GMT", gmtime( $when );
-}
-
-#---------------------------------------------------------------------
-
-sub element {
-    my ( $w, $name, $text ) = @_;
-    if ( ref $name && $name->can( 'StartElement' ) ) {
-        $name->StartElement;
-    } else {
-        $w->StartElementLiteral( $name );
-    }
-    $w->AddText( $text );
-    $w->EndElement;
 }
