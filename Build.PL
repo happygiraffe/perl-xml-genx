@@ -6,7 +6,7 @@ use Module::Build;
 
 Module::Build->new(
     module_name        => 'XML::Genx',
-    license            => 'perl',
+    license            => 'bsd',
     requires           => { 'perl' => '5.6.1', },
     create_makefile_pl => 'passthrough',
     c_source           => 'src',
