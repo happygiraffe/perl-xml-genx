@@ -529,14 +529,14 @@ genxDeclareElement( w, ... )
         type = (constUtf8)SvPV_nolen(ST(1));
     } else if ( items == 3 ) {
         /*  Bleargh, would be nice to be able to reuse typemap here */
-	if (ST(1) == &PL_sv_undef) {
-	    ns = (XML_Genx_Namespace) NULL;
-	} else if (sv_derived_from(ST(1), "XML::Genx::Namespace")) {
-	    IV tmp = SvIV((SV*)SvRV(ST(1)));
-	    ns = INT2PTR(XML_Genx_Namespace, tmp);
-	} else {
-	    croak("ns is not undef or of type XML::Genx::Namespace");
-	}
+        if (ST(1) == &PL_sv_undef) {
+            ns = (XML_Genx_Namespace) NULL;
+        } else if (sv_derived_from(ST(1), "XML::Genx::Namespace")) {
+            IV tmp = SvIV((SV*)SvRV(ST(1)));
+            ns = INT2PTR(XML_Genx_Namespace, tmp);
+        } else {
+            croak("ns is not undef or of type XML::Genx::Namespace");
+        }
         type = (constUtf8)SvPV_nolen(ST(2));
     } else {
         croak( "Usage: w->DeclareElement([ns],type)" );
@@ -562,14 +562,14 @@ genxDeclareAttribute( w, ... )
         name = (constUtf8)SvPV_nolen(ST(1));
     } else if ( items == 3 ) {
         /*  Bleargh, would be nice to be able to reuse typemap here */
-	if (ST(1) == &PL_sv_undef) {
-	    ns = (XML_Genx_Namespace) NULL;
-	} else if (sv_derived_from(ST(1), "XML::Genx::Namespace")) {
-	    IV tmp = SvIV((SV*)SvRV(ST(1)));
-	    ns = INT2PTR(XML_Genx_Namespace, tmp);
-	} else {
-	    croak("ns is not undef or of type XML::Genx::Namespace");
-	}
+        if (ST(1) == &PL_sv_undef) {
+            ns = (XML_Genx_Namespace) NULL;
+        } else if (sv_derived_from(ST(1), "XML::Genx::Namespace")) {
+            IV tmp = SvIV((SV*)SvRV(ST(1)));
+            ns = INT2PTR(XML_Genx_Namespace, tmp);
+        } else {
+            croak("ns is not undef or of type XML::Genx::Namespace");
+        }
         name = (constUtf8)SvPV_nolen(ST(2));
     } else {
         croak( "Usage: w->DeclareAttribute([ns],name)" );
