@@ -30,6 +30,25 @@
 #include "XSUB.h"
 #include "genx.h"
 
+/*
+ * Initialize the hash inside the writer, reusing the existing one if
+ * possible.  This should be called by each StartDocFoo().
+ */
+
+HV *
+initSelfUserData( genxWriter w )
+{
+    HV *self;
+    self = (HV *)genxGetUserData( w );
+    if ( self != NULL ) {
+        hv_clear( self );
+    } else {
+        self = newHV();
+        genxSetUserData( w, self );
+    }
+    return self;
+}
+
 /* 
  * We use a typemap to change the underscore into a double colon.
  * This makes it easier to get things of the right class used.
@@ -44,7 +63,8 @@ static genxStatus
 sender_write( void *userData, constUtf8 s )
 {
     dSP;
-    SV *coderef = (SV *)userData;
+    HV *self = (HV *)userData;
+    SV **svp;
     SV *str = newSVpv( (const char *)s, 0 );
     ENTER;
     SAVETMPS;
@@ -59,7 +79,8 @@ sender_write( void *userData, constUtf8 s )
     PUTBACK;
 
     /* Do the business. */
-    (void)call_sv( coderef, G_VOID );
+    if ((svp = hv_fetch( self, "callback", 8, 0 )))
+        (void)call_sv( *svp, G_VOID );
 
     SPAGAIN;                    /* XXX Necessary? */
 
@@ -72,7 +93,8 @@ static genxStatus
 sender_write_bounded( void *userData, constUtf8 start, constUtf8 end )
 {
     dSP;
-    SV *coderef = (SV *)userData;
+    HV *self = (HV *)userData;
+    SV **svp;
     SV *str = newSVpv((const char *)start, end - start);
     ENTER;
     SAVETMPS;
@@ -87,7 +109,8 @@ sender_write_bounded( void *userData, constUtf8 start, constUtf8 end )
     PUTBACK;
 
     /* Do the business. */
-    (void)call_sv( coderef, G_VOID );
+    if ((svp = hv_fetch( self, "callback", 8, 0 )))
+        (void)call_sv( *svp, G_VOID );
 
     SPAGAIN;                    /* XXX Necessary? */
 
@@ -100,7 +123,8 @@ static genxStatus
 sender_flush( void *userData )
 {
     dSP;
-    SV *coderef = (SV *)userData;
+    HV *self = (HV *)userData;
+    SV **svp;
     ENTER;
     SAVETMPS;
 
@@ -111,7 +135,8 @@ sender_flush( void *userData )
     PUTBACK;
 
     /* Do the business. */
-    (void)call_sv( coderef, G_VOID );
+    if ((svp = hv_fetch( self, "callback", 8, 0 )))
+        (void)call_sv( *svp, G_VOID );
 
     SPAGAIN;                    /* XXX Necessary? */
 
@@ -128,8 +153,8 @@ static genxSender sender = {
 
 /*
  * Some helper functions for automatically appending genx output into a
- * string.  Thanks to shiny genx neatness, we can store the SV that
- * we're outputting to in the userdata field.
+ * string.  The string is stored inside a hash, which genx's userData
+ * field holds for us.
  */
 
 static genxStatus
@@ -139,7 +164,7 @@ string_sender_write( void *userData, constUtf8 s )
     SV **svp;
     ENTER;
     SAVETMPS;
-    if ((svp = hv_fetch( self, "string", 6, 1 )))
+    if ((svp = hv_fetch( self, "string", 6, 0 )))
         sv_catpv( *svp, s );
     FREETMPS;
     LEAVE;
@@ -153,7 +178,7 @@ string_sender_write_bounded( void *userData, constUtf8 start, constUtf8 end )
     SV **svp;
     ENTER;
     SAVETMPS;
-    if ((svp = hv_fetch( self, "string", 6, 1 )))
+    if ((svp = hv_fetch( self, "string", 6, 0 )))
         sv_catpvn( *svp, start, end - start );
     FREETMPS;
     LEAVE;
@@ -302,20 +327,11 @@ genxStartDocSender( w, callback )
     XML_Genx w
     SV *callback
   PREINIT:
-    SV *oldcallback;
+    HV *self;
   CODE:
-    /*
-     * Based on Section 6.7.2 of "Extending and Embedding Perl".
-     * First time around, we take a copy of the SV passed in.  Next
-     * time around, we reuse the same SV, but still taking care to
-     * ensure that the ref counts are correct.
-     */
-    oldcallback = (SV *)genxGetUserData( w );
-    if ( oldcallback == NULL ) {
-        genxSetUserData( w, (void *)newSVsv( callback ) );
-    } else {
-        SvSetSV( oldcallback, callback );
-    }
+    self = initSelfUserData( w );
+    if (!hv_store( self, "callback", 8, SvREFCNT_inc(callback), 0 ))
+        SvREFCNT_dec( callback );
     RETVAL = genxStartDocSender( w, &sender );
   POSTCALL:
     croak_on_genx_error( w, RETVAL );
@@ -740,10 +756,11 @@ genxStatus
 genxStartDocString( w )
     XML_Genx w
   PREINIT:
-    HV *self = newHV();
+    HV *self;
   CODE:
-    (void)hv_store(self, "string", 6, newSVpv("", 0), 0);
-    genxSetUserData( w, (void *)self );
+    self = initSelfUserData( w );
+    /* No need to inc ref count as we're creating the SV here. */
+    (void)hv_store( self, "string", 6, newSVpv("", 0), 0 );
     RETVAL = genxStartDocSender( w, &string_sender );
   OUTPUT:
     RETVAL
@@ -762,6 +779,7 @@ genxGetDocString( w )
      */
     if ((svp = hv_fetch(self, "string", 6, 0))) {
         SvUTF8_on( *svp );
+        SvREFCNT_inc( *svp );
         RETVAL = *svp;
     } else {
         RETVAL = &PL_sv_undef;
