@@ -6,6 +6,7 @@ Revision history for XML::Genx.
 	  didn't get the line number information about where the exception
 	  actually happened.
 	- Allude to Win32 compiler problems in README.
+	- Remove some compiler warnings.
 	- Cope with either a glob or a reference to a glob in
           StartDocFile().
 
