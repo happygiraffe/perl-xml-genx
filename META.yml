@@ -4,7 +4,7 @@ version: 0.01
 author:
   - Dominic Mitchell, E<lt>dom@happygiraffe.netE<gt>
 abstract: Simple, correct XML writer
-license: perl
+license: bsd
 requires:
   perl: 5.6.1
 provides:
