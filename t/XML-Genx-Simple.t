@@ -24,3 +24,5 @@ eval {
 is( $@, '', 'That went well.' );
 is( $out, '<root><foo id="1">bar</foo><bar id="2">baz</bar></root>',
     'Element()' );
+
+# vim: set ai et sw=4 syntax=perl :
