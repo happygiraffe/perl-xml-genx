@@ -38,8 +38,7 @@
 HV *
 initSelfUserData( genxWriter w )
 {
-    HV *self;
-    self = (HV *)genxGetUserData( w );
+    HV *self = (HV *)genxGetUserData( w );
     if ( self != NULL ) {
         hv_clear( self );
     } else {
