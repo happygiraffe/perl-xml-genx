@@ -4,7 +4,7 @@ Revision history for XML::Genx.
 	- [INCOMPATIBLE CHANGE] Get rid of the dual valued scalar
 	  exception idea.  The way it was implemented meant that you
 	  didn't get the line number information about where the exception
-	  actually happened.
+	  actually happened.  Instead, add a LastErrorCode() call.
 	- Allude to Win32 compiler problems in README.
 	- Remove some compiler warnings.
 	- Cope with either a glob or a reference to a glob in
