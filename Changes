@@ -1,5 +1,9 @@
 Revision history for XML::Genx.
 
+0.12  Tue Mar  1 11:22:13 GMT 2005
+	- Cope with either a glob or a reference to a glob in
+          StartDocFile().
+
 0.11  Sat Feb 19 18:17:12 GMT 2005
         - Add ScrubText() wrapping.  Thanks to A. Pagaltzis for
           requesting this feature.
