@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 24;
+use Test::More tests => 25;
 
 use_ok('XML::Genx');
 
@@ -21,6 +21,9 @@ can_ok( $w, qw(
     Comment
     PI
 ) );
+
+# Subtly different to VERSION()...
+is( XML::Genx->GetVersion, 'beta5', 'GetVersion()' );
 
 is(
     test_basics(),

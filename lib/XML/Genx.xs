@@ -96,3 +96,11 @@ genxPI( w, target, text );
     genxWriter w
     constUtf8 target
     constUtf8 text
+
+char *
+genxGetVersion( class )
+    char * class
+  CODE:
+    RETVAL = genxGetVersion();
+  OUTPUT:
+    RETVAL
