@@ -46,12 +46,16 @@ sender_write( void *userData, constUtf8 s )
 {
     dSP;
     SV *coderef = (SV *)userData;
+    SV *str = newSVpv( (const char *)s, 0 );
     ENTER;
     SAVETMPS;
 
+    /* genx guarantees that thus will be UTF-8, so tell Perl that. */
+    SvUTF8_on(str);
+
     /* Set up the stack. */
     PUSHMARK(SP);
-    XPUSHs(sv_2mortal(newSVpv((const char *)s, 0)));
+    XPUSHs(sv_2mortal(str));
     XPUSHs(sv_2mortal(newSVpv("write", 5)));
     PUTBACK;
 
@@ -70,12 +74,16 @@ sender_write_bounded( void *userData, constUtf8 start, constUtf8 end )
 {
     dSP;
     SV *coderef = (SV *)userData;
+    SV *str = newSVpv((const char *)start, end - start);
     ENTER;
     SAVETMPS;
 
+    /* genx guarantees that thus will be UTF-8, so tell Perl that. */
+    SvUTF8_on(str);
+
     /* Set up the stack. */
     PUSHMARK(SP);
-    XPUSHs(sv_2mortal(newSVpv((const char *)start, end - start)));
+    XPUSHs(sv_2mortal(str));
     XPUSHs(sv_2mortal(newSVpv("write_bounded", 13)));
     PUTBACK;
 

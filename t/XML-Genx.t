@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 54;
+use Test::More tests => 55;
 
 use_ok('XML::Genx');
 
@@ -70,7 +70,7 @@ is(
 
 is(
     test_sender(),
-    '<foo></foo>',
+    "<foo>\x{0100}dam</foo>",
     'test_sender() output',
 );
 
@@ -202,6 +202,7 @@ sub test_sender {
         $w->StartElementLiteral( undef, 'foo' ), 0,
         'StartElementLiteral(undef,foo)'
     );
+    is( $w->AddText( "\x{0100}dam" ), 0, 'AddText(*utf8*)' );
     is( $w->EndElement,  0, 'EndElement()' );
     is( $w->EndDocument, 0, 'EndDocument()' );
     return $out;
