@@ -105,20 +105,23 @@ Given a genxStatus code, return the equivalent string.
 
 =item AddText ( STRING )
 
-Output STRING.
+Output STRING.  STRING must be valid UTF-8.
 
 =item AddCharacter ( C )
 
-Output the Unicode character with codepoint C (an integer).
+Output the Unicode character with codepoint C (an integer).  This is
+normally obtained by ord().
 
 =item Comment ( STRING )
 
-Output STRING as an XML comment.
+Output STRING as an XML comment.  Genx will complain if STRING
+contains "--".
 
 =item PI ( TARGET, STRING )
 
 Output a processing instruction, with target TARGET and STRING as the
-body.
+body.  Genx will complain if STRING contains "?>" or if TARGET is the
+string "xml" (in any case).
 
 =item UnsetDefaultNamespace ( )
 
