@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name: XML-Genx
-version: 0.02
+version: 0.03
 author:
   - Dominic Mitchell, E<lt>dom@happygiraffe.netE<gt>
 abstract: Simple, correct XML writer
@@ -10,5 +10,5 @@ requires:
 provides:
   XML::Genx:
     file: lib/XML/Genx.pm
-    version: 0.02
+    version: 0.03
 generated_by: Module::Build version 0.2604
