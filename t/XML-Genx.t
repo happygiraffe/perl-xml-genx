@@ -5,17 +5,19 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 25;
+use Test::More tests => 26;
 
 use_ok('XML::Genx');
 
 my $w = XML::Genx->new();
 isa_ok( $w, 'XML::Genx' );
 can_ok( $w, qw(
+    GetVersion
     StartDocFile
     LastErrorMessage
     GetErrorMessage
     StartElementLiteral
+    AddAttributeLiteral
     EndElement
     EndDocument
     Comment
@@ -29,7 +31,7 @@ is(
     test_basics(),
     '<!--hello world-->
 <?ping pong?>
-<g1:foo xmlns:g1="urn:foo">bar</g1:foo>',
+<g1:foo xmlns:g1="urn:foo" g1:baz="quux">bar</g1:foo>',
     'test_basics() output'
 );
 
@@ -57,6 +59,8 @@ sub test_basics {
     is( $w->PI( qw( ping pong ) ), 0, 'PI(ping pong)' );
     is( $w->StartElementLiteral( 'urn:foo', 'foo' ),
         0, 'StartElementLiteral(urn:foo,foo)' );
+    is( $w->AddAttributeLiteral( 'urn:foo', 'baz', 'quux' ),
+        0, 'AddAttributeLiteral(urn:foo,baz,quux)' );
     is( $w->AddText( 'bar' ), 0, 'AddText(bar)' );
     is( $w->EndElement,       0, 'EndElement()' );
     is( $w->EndDocument,      0, 'EndDocument()' );

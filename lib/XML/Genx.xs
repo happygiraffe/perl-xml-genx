@@ -68,6 +68,30 @@ genxStartElementLiteral( w, xmlns_sv, name )
   OUTPUT:
     RETVAL
 
+# Same issue with xmlns here as in genxStartElementLiteral().
+genxStatus
+genxAddAttributeLiteral( w, xmlns_sv, name, value )
+    genxWriter w
+    SV*        xmlns_sv
+    constUtf8  name
+    constUtf8  value
+  PREINIT:
+    constUtf8  xmlns;
+  INIT:
+    /* Undef means "no namespace". */
+    if ( xmlns_sv == &PL_sv_undef ) {
+        xmlns = NULL;
+    } else {
+        xmlns = (constUtf8)SvPV_nolen(xmlns_sv);
+       /* Empty string means "no namespace" too. */
+       if ( *xmlns == '\0' )
+           xmlns = NULL;
+    }
+  CODE:
+    RETVAL = genxAddAttributeLiteral( w, xmlns, name, value );
+  OUTPUT:
+    RETVAL
+
 genxStatus
 genxEndElement( w )
     genxWriter w
