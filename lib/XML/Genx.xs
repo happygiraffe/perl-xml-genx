@@ -747,6 +747,7 @@ genxStartDocString( w )
   OUTPUT:
     RETVAL
 
+# XXX There is no way to guarantee that this will be a valid SV.
 SV *
 genxGetDocString( w )
     XML_Genx w
