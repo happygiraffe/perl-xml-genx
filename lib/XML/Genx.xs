@@ -132,8 +132,6 @@ static genxSender sender = {
  * we're outputting to in the userdata field.
  */
 
-static HV *string_sender_store;
-
 static genxStatus
 string_sender_write( void *userData, constUtf8 s )
 {
