@@ -196,6 +196,9 @@ static genxSender string_sender = {
     string_sender_flush
 };
 
+/*
+ * Small utility function to throw the correct exception.
+ */
 static void
 croak_on_genx_error( genxWriter w, genxStatus st )
 {
@@ -225,53 +228,6 @@ croak_on_genx_error( genxWriter w, genxStatus st )
         croak( Nullch );
     }
     return;
-}
-
-/*
- * When we get given a filehandle, we need to increment the refcount
- * so that Perl doesn't close it for us.  But then we also need to
- * decrement the refcount when we are done with it.
- *
- * Because we don't have anywhere inside $self to store the
- * filehandle, we put them in a hash indexed by $self here.
- */
-
-static HV *filehandle_suitcase;
-
-static void
-begin_using_filehandle( SV *self, SV *in_fh )
-{
-  SV *glob;
-
-  if ( !filehandle_suitcase )
-    filehandle_suitcase = newHV();
-
-  /* Get the contents if it's a reference. */
-  if ( SvROK( in_fh ) )
-    glob = SvRV( in_fh );
-  else
-    glob = in_fh;
-
-  (void)hv_store_ent( filehandle_suitcase, self, newRV_inc( glob ), 0 );
-}
-
-static void
-end_using_filehandle( SV *self )
-{
-  SV *glob;
-  SV *val;
-
-  if ( !filehandle_suitcase )
-    return;
-
-  /*
-   * If we've got a filehandle in the hash, remove it and decrement
-   * the reference count.  It appears that calling delete() is enough
-   * to do this and you don't have to call SvREFCND_dec() yourself...
-   */
-  if ( hv_exists_ent( filehandle_suitcase, self, 0 ) ) {
-    val = hv_delete_ent( filehandle_suitcase, self, 0, 0 );
-  }
 }
 
 MODULE = XML::Genx	PACKAGE = XML::Genx	PREFIX=genx
@@ -305,7 +261,9 @@ genxStartDocFile( w, fh )
     FILE *fh
   PREINIT:
     struct stat st;
+    HV *self;
   INIT:
+    self = initSelfUserData( w );
     /* 
      * Sometimes we get back a filehandle with an invalid file
      * descriptor instead of NULL.  So use fstat() to check that it's
@@ -318,7 +276,8 @@ genxStartDocFile( w, fh )
     if ( fh == NULL || fstat(fileno(fh), &st) == -1 )
       croak( "Bad filehandle" );
     /* Store a reference to the filehandle. */
-    begin_using_filehandle( ST(0), ST(1) );
+    if (!hv_store( self, "fh", 2, SvREFCNT_inc(ST(1)), 0))
+        SvREFCNT_dec( ST(1) );
   POSTCALL:
     croak_on_genx_error( w, RETVAL );
 
@@ -341,10 +300,14 @@ genxStartDocSender( w, callback )
 genxStatus
 genxEndDocument( w )
     XML_Genx w
+  PREINIT:
+    HV *self;
+    SV **svp;
   POSTCALL:
-    croak_on_genx_error( w, RETVAL );
+    self = (HV *)genxGetUserData( w );;
     /* Decrement the reference count on the filehandle. */
-    end_using_filehandle( ST(0) );
+    hv_delete( self, "fh", 2, G_DISCARD );
+    croak_on_genx_error( w, RETVAL );
 
 # Take a variable length list so that we can make the namespace
 # parameter optional.  Even when present, it will only be used if it's
