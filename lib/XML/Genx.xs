@@ -5,6 +5,17 @@
 #include "XSUB.h"
 #include "genx.h"
 
+/* 
+ * xsubpp will automatically change a double underscore into a double
+ * colon meaning that we get the correct class names for free from the
+ * standard typemap file.
+ */
+
+typedef genxWriter    XML_Genx;
+typedef genxNamespace XML_Genx_Namespace;
+typedef genxElement   XML_Genx_Element;
+typedef genxAttribute XML_Genx_Attribute;
+
 MODULE = XML::Genx	PACKAGE = XML::Genx	PREFIX=genx
 
 PROTOTYPES: DISABLE
@@ -16,7 +27,7 @@ void
 new( klass )
     char* klass
   INIT:
-    genxWriter w;
+    XML_Genx w;
   PPCODE:
     w = genxNew( NULL, NULL, NULL );
     ST( 0 ) = sv_newmortal();
@@ -26,13 +37,13 @@ new( klass )
 
 void
 DESTROY( w )
-    genxWriter w
+    XML_Genx w
   CODE:
     genxDispose( w );
 
 genxStatus
 genxStartDocFile( w, fh )
-    genxWriter w
+    XML_Genx w
     FILE *fh
   INIT:
     if ( fh == NULL )
@@ -40,7 +51,7 @@ genxStartDocFile( w, fh )
 
 genxStatus
 genxEndDocument( w )
-    genxWriter w
+    XML_Genx w
 
 # Because xmlns can be NULL, we need to allow undef here.  However,
 # the typemap for "char*" throws a warning if you pass that in.
@@ -48,7 +59,7 @@ genxEndDocument( w )
 # *lot* more work...
 genxStatus
 genxStartElementLiteral( w, xmlns_sv, name )
-    genxWriter w
+    XML_Genx w
     SV*        xmlns_sv
     constUtf8  name
   PREINIT:
@@ -71,7 +82,7 @@ genxStartElementLiteral( w, xmlns_sv, name )
 # Same issue with xmlns here as in genxStartElementLiteral().
 genxStatus
 genxAddAttributeLiteral( w, xmlns_sv, name, value )
-    genxWriter w
+    XML_Genx w
     SV*        xmlns_sv
     constUtf8  name
     constUtf8  value
@@ -94,41 +105,41 @@ genxAddAttributeLiteral( w, xmlns_sv, name, value )
 
 genxStatus
 genxEndElement( w )
-    genxWriter w
+    XML_Genx w
 
 char *
 genxLastErrorMessage( w )
-    genxWriter w
+    XML_Genx w
 
 char *
 genxGetErrorMessage( w, st )
-    genxWriter w
+    XML_Genx w
     genxStatus st
 
 genxStatus
 genxAddText( w, start )
-    genxWriter w
+    XML_Genx w
     constUtf8 start
 
 genxStatus
 genxAddCharacter( w, c )
-    genxWriter w
+    XML_Genx w
     int c
 
 genxStatus
 genxComment( w, text )
-    genxWriter w
+    XML_Genx w
     constUtf8 text
 
 genxStatus
 genxPI( w, target, text );
-    genxWriter w
+    XML_Genx w
     constUtf8 target
     constUtf8 text
 
 genxStatus
 genxUnsetDefaultNamespace( w )
-    genxWriter w
+    XML_Genx w
 
 char *
 genxGetVersion( class )
@@ -142,12 +153,12 @@ genxGetVersion( class )
 # "undef" in properly.
 void
 genxDeclareNamespace( w, uri, prefix_sv )
-    genxWriter w
+    XML_Genx w
     constUtf8  uri
     SV*        prefix_sv
   PREINIT:
     constUtf8     prefix;
-    genxNamespace ns;
+    XML_Genx_Namespace ns;
     genxStatus    st;
   INIT:
     if ( prefix_sv == &PL_sv_undef ) {
@@ -169,12 +180,12 @@ genxDeclareNamespace( w, uri, prefix_sv )
 # XXX Ensure ns is optional.
 void
 genxDeclareElement( w, ns, type )
-    genxWriter    w
-    genxNamespace ns
+    XML_Genx    w
+    XML_Genx_Namespace ns
     constUtf8     type
   PREINIT:
     genxStatus  st;
-    genxElement el;
+    XML_Genx_Element el;
   PPCODE:
     el = genxDeclareElement( w, ns, type, &st );
     if ( el && st == GENX_SUCCESS ) {
@@ -189,12 +200,12 @@ genxDeclareElement( w, ns, type )
 # XXX Ensure ns is optional.
 void
 genxDeclareAttribute( w, ns, name )
-    genxWriter    w
-    genxNamespace ns
+    XML_Genx    w
+    XML_Genx_Namespace ns
     constUtf8     name
   PREINIT:
     genxStatus    st;
-    genxAttribute at;
+    XML_Genx_Attribute at;
   PPCODE:
     at = genxDeclareAttribute( w, ns, name, &st );
     if ( at && st == GENX_SUCCESS ) {
@@ -210,18 +221,18 @@ MODULE = XML::Genx	PACKAGE = XML::Genx::Namespace	PREFIX=genx
 
 utf8
 genxGetNamespacePrefix( ns )
-    genxNamespace ns
+    XML_Genx_Namespace ns
 
 MODULE = XML::Genx	PACKAGE = XML::Genx::Element	PREFIX=genx
 
 genxStatus
 genxStartElement( e )
-    genxElement e
+    XML_Genx_Element e
 
 MODULE = XML::Genx	PACKAGE = XML::Genx::Attribute	PREFIX=genx
 
 genxStatus
 genxAddAttribute( a, value )
-    genxAttribute a
+    XML_Genx_Attribute a
     constUtf8 value
 

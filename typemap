@@ -1,46 +1,24 @@
 # @(#) $Id$
 
-# NB: Because xsubpp always does s/OBJ$/REF/ on your type name (when
-# your method is called DESTROY), it's a really bad idea to make the
-# type name end in "OBJ".  Apart from the diddling with the class
-# name, this is otherwise identical to T_PTROBJ.
+# T_PTROBJ_SPECIAL definition taken from perlxs(1).
 
-genxWriter	T_GENXWRITER
-genxNamespace	T_GENXNAMESPACE
-genxElement	T_GENXELEMENT
-genxAttribute	T_GENXATTRIBUTE
-genxStatus	T_IV
-utf8		T_PV
-constUtf8	T_PV
-
-#########################################################################
+XML_Genx		T_PTROBJ_SPECIAL
+XML_Genx_Namespace	T_PTROBJ_SPECIAL
+XML_Genx_Element	T_PTROBJ_SPECIAL
+XML_Genx_Attribute	T_PTROBJ_SPECIAL
+genxStatus		T_IV
+utf8			T_PV
+constUtf8		T_PV
 
 INPUT
-T_GENXWRITER
-	if (sv_derived_from($arg, \"XML::Genx\")) {
+T_PTROBJ_SPECIAL
+	if (sv_derived_from($arg, \"${(my $ntt=$ntype)=~s/_/::/g;\$ntt}\")) {
 	    IV tmp = SvIV((SV*)SvRV($arg));
-	    $var = INT2PTR($type, tmp);
+	    $var = ($type) tmp;
 	} else {
-	    Perl_croak(aTHX_ \"$var is not of type XML::Genx\");
+	    croak(\"$var is not of type ${(my $ntt=$ntype)=~s/_/::/g;\$ntt}\");
 	}
-T_GENXNAMESPACE
-	if (sv_derived_from($arg, \"XML::Genx::Namespace\")) {
-	    IV tmp = SvIV((SV*)SvRV($arg));
-	    $var = INT2PTR($type, tmp);
-	} else {
-	    Perl_croak(aTHX_ \"$var is not of type XML::Genx::Namespace\");
-	}
-T_GENXELEMENT
-	if (sv_derived_from($arg, \"XML::Genx::Element\")) {
-	    IV tmp = SvIV((SV*)SvRV($arg));
-	    $var = INT2PTR($type, tmp);
-	} else {
-	    Perl_croak(aTHX_ \"$var is not of type XML::Genx::Element\");
-	}
-T_GENXATTRIBUTE
-	if (sv_derived_from($arg, \"XML::Genx::Attribute\")) {
-	    IV tmp = SvIV((SV*)SvRV($arg));
-	    $var = INT2PTR($type, tmp);
-	} else {
-	    Perl_croak(aTHX_ \"$var is not of type XML::Genx::Attribute\");
-	}
+
+OUTPUT
+T_PTROBJ_SPECIAL
+	sv_setref_pv($arg, \"${(my $ntt=$ntype)=~s/_/::/g;\$ntt}\",(void*)$var);
