@@ -424,6 +424,8 @@ char *
 genxGetVersion( class )
     char * class
   CODE:
+    /* avoid unused variable warning. */
+    (void)class;
     RETVAL = genxGetVersion();
   OUTPUT:
     RETVAL
