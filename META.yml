@@ -17,4 +17,4 @@ provides:
   XML::Genx::Simple:
     file: lib/XML/Genx/Simple.pm
     version: 0.10
-generated_by: Module::Build version 0.2606
+generated_by: Module::Build version 0.2608
