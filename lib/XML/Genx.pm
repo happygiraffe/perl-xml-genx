@@ -127,17 +127,55 @@ Return the version number of the Genx library in use.
 
 =item DeclareNamespace ( URI, PREFIX )
 
-Returns a new namespace object.
+Returns a new namespace object.  The resulting object has one method
+defined on it.
+
+=over 4
+
+=item GetNamespacePrefix ( )
+
+Returns the current prefix in scope for this namespace.
+
+=back
+
+B<NB>: This object is only valid as long as the original L<XML::Genx>
+object that created it is still alive.
 
 =item DeclareElement ( NS, NAME )
 
 Returns a new element object.  NS must an object returned by
 DeclareNamespace(), or undef to indicate no namespace.
 
+The resulting object has one method available to call.
+
+=over 4
+
+=item StartElement ( )
+
+Outputs a start tag.
+
+=back
+
+B<NB>: This object is only valid as long as the original L<XML::Genx>
+object that created it is still alive.
+
 =item DeclareAttribute ( NS, NAME )
 
 Returns a new attribute object.  NS must an object returned by
 DeclareNamespace(), or undef to indicate no namespace.
+
+There is one method defined for this object.
+
+=over 4
+
+=item AddAttribute ( VALUE )
+
+Adds an attribute to the current element with VALUE as the contents.
+
+=back
+
+B<NB>: This object is only valid as long as the original L<XML::Genx>
+object that created it is still alive.
 
 =back
 
@@ -184,12 +222,6 @@ sits on top of Genx.
 
 Make the constants available in Perl.  I don't think this is needed
 yet.
-
-=item *
-
-Make the interface more Perlish where possible.  I really like the way
-that the Ruby interface uses blocks, but I don't think it'd be as
-practical in Perl.
 
 =item *
 
