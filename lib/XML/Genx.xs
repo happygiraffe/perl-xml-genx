@@ -244,7 +244,6 @@ static void
 croak_on_genx_error( genxWriter w, genxStatus st )
 {
     char *msg;
-    HV *self;
 
     if ( st == GENX_SUCCESS ) {
         msg = NULL;
@@ -254,10 +253,6 @@ croak_on_genx_error( genxWriter w, genxStatus st )
         /* 
          * If we don't have a writer object handy, make one for this
          * purpose.  This is slow, but unavoidable.
-         *
-         * Also, this means that we don't have anywhere to store the
-         * status code.  Annoying, but hopefully this will be a rare
-         * occurrence.
          */
         w = genxNew( NULL, NULL, NULL );
         msg = genxGetErrorMessage( w, st );
@@ -265,16 +260,12 @@ croak_on_genx_error( genxWriter w, genxStatus st )
         w = NULL;
     }
 
-    if ( msg ) {
-        /*
-         * Store the status for later retrieval as well, if possible.
-         */
-        if ( w ) {
-            self = (HV *)genxGetUserData( w );
-            hv_store( self, "status", 6, newSViv( st ), 0 );
-        }
+    /*
+     * We rely on the writer object to store the associated status code
+     * for us.
+     */
+    if ( msg )
         croak( msg );
-    }
 }
 
 MODULE = XML::Genx	PACKAGE = XML::Genx	PREFIX=genx
@@ -291,8 +282,6 @@ new( klass )
     XML_Genx w;
   PPCODE:
     w = genxNew( NULL, NULL, NULL );
-    /* We need this set up early in case we croak. */
-    (void)initSelfUserData( w );
     ST( 0 ) = sv_newmortal();
     sv_setref_pv( ST(0), klass, (void*)w );
     SvREADONLY_on(SvRV(ST(0)));
