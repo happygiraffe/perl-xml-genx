@@ -1,8 +1,8 @@
 --- #YAML:1.0
 name: XML-Genx
-version: 0.03
+version: 0.04
 author:
-  - Dominic Mitchell, E<lt>dom@happygiraffe.netE<gt>
+  - Dominic Mitchell, E<lt>cpan@happygiraffe.netE<gt>
 abstract: Simple, correct XML writer
 license: bsd
 requires:
@@ -10,5 +10,5 @@ requires:
 provides:
   XML::Genx:
     file: lib/XML/Genx.pm
-    version: 0.03
+    version: 0.04
 generated_by: Module::Build version 0.2604
