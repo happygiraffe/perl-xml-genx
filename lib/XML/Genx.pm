@@ -170,6 +170,14 @@ slightly easier interface than filehandles.
 
 =item *
 
+Clean up warnings from the C compiler under FreeBSD.  They appear to
+be related to 64 bit integers, but I need to investigate further.
+
+  lib/XML/Genx.c: In function `XS_XML__Genx_DESTROY':
+  lib/XML/Genx.c:98: warning: cast to pointer from integer of different size
+
+=item *
+
 Make the constants available in Perl.
 
 =item *
