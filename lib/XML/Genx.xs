@@ -285,8 +285,8 @@ genxStartDocFile( w, fh )
     if ( fh == NULL || fstat(fileno(fh), &st) == -1 )
       croak( "Bad filehandle" );
     /* Store a reference to the filehandle. */
-    if (!hv_store( self, "fh", 2, SvREFCNT_inc(ST(1)), 0))
-        SvREFCNT_dec( ST(1) );
+    if (!hv_store( self, "fh", 2, SvREFCNT_inc(SvRV(ST(1))), 0))
+        SvREFCNT_dec( SvRV(ST(1)) );
   POSTCALL:
     croak_on_genx_error( w, RETVAL );
 
