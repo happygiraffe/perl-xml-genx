@@ -166,6 +166,7 @@ genxDeclareNamespace( w, uri, prefix_sv )
         XSRETURN_UNDEF;
     }
 
+# XXX Ensure ns is optional.
 void
 genxDeclareElement( w, ns, type )
     genxWriter    w
@@ -185,6 +186,7 @@ genxDeclareElement( w, ns, type )
         XSRETURN_UNDEF;
     }
 
+# XXX Ensure ns is optional.
 void
 genxDeclareAttribute( w, ns, name )
     genxWriter    w
