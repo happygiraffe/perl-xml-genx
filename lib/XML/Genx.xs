@@ -142,8 +142,19 @@ croak_on_genx_error( genxWriter w, genxStatus st )
         msg = genxGetErrorMessage( w, st );
         genxDispose( w );
     }
-    if ( msg )
-        croak( msg );
+    if ( msg ) {
+        /*
+         * Make the exception be a dual scalar, with genxStatus as the
+         * integer part.  Idea taken from Scalar::Util::dualvar.
+         */
+        SV *errsv     = get_sv( "@", TRUE );
+        SV *exception = sv_2mortal( newSVpv( msg, 0 ) );
+        (void)SvUPGRADE( exception, SVt_PVIV );
+        SvIVX( exception ) = st;
+        SvIOK_on( exception );
+        sv_setsv( errsv, exception );
+        croak( Nullch );
+    }
     return;
 }
 
