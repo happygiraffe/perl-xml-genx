@@ -1,6 +1,9 @@
 Revision history for XML::Genx.
 
-0.06  Thu Dec  2 10:58:42 GMT 2004
+0.06  Fri Dec  3 14:10:35 GMT 2004
+	- On Windows, require the next version of Module::Build, which
+	  has a bug fix that we need in it.  Unfortunately, that means
+	  that we won't be available on Windows until that's released.
 	- Make a missing or undef prefix argument mean auto-create a
 	  prefix instead.
 	- Add missing AddNamespace() on to namespace object.
