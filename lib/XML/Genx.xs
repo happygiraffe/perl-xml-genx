@@ -137,3 +137,37 @@ genxGetVersion( class )
     RETVAL = genxGetVersion();
   OUTPUT:
     RETVAL
+
+# Blah, blah, Need to use an SV instead of a char* in order to let
+# "undef" in properly.
+void
+genxDeclareNamespace( w, uri, prefix_sv )
+    genxWriter w
+    constUtf8  uri
+    SV*        prefix_sv
+  PREINIT:
+    constUtf8     prefix;
+    genxNamespace ns;
+    genxStatus    st;
+  INIT:
+    if ( prefix_sv == &PL_sv_undef ) {
+        prefix = NULL;
+    } else {
+        prefix = (constUtf8)SvPV_nolen(prefix_sv);
+    }
+  PPCODE:
+    ns = genxDeclareNamespace( w, uri, prefix, &st );
+    if ( ns && st == GENX_SUCCESS ) {
+        ST( 0 ) = sv_newmortal();
+        sv_setref_pv( ST(0), "XML::Genx::Namespace", (void*)ns );
+        SvREADONLY_on(SvRV(ST(0)));
+        XSRETURN( 1 );
+    } else {
+        XSRETURN_UNDEF;
+    }
+
+MODULE = XML::Genx	PACKAGE = XML::Genx::Namespace	PREFIX=genx
+
+utf8
+genxGetNamespacePrefix( ns )
+    genxNamespace ns

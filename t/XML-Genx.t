@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 27;
+use Test::More tests => 31;
 
 use_ok('XML::Genx');
 
@@ -22,6 +22,7 @@ can_ok( $w, qw(
     EndDocument
     Comment
     PI
+    DeclareNamespace
 ) );
 
 # Subtly different to VERSION()...
@@ -48,8 +49,10 @@ is(
 );
 
 test_bad_filehandle();
+test_declare_namespace();
 
 sub test_basics {
+    my $w = XML::Genx->new();
     my $fh = tempfile();
     is( $w->StartDocFile( $fh ),  0,         'StartDocFile(fh)' );
     is( $w->LastErrorMessage,     'Success', 'LastErrorMessage()' );
@@ -69,6 +72,7 @@ sub test_basics {
 }
 
 sub test_empty_namespace {
+    my $w = XML::Genx->new();
     my $fh = tempfile();
     is( $w->StartDocFile( $fh ), 0, 'StartDocFile(fh)' );
     is(
@@ -81,6 +85,7 @@ sub test_empty_namespace {
 }
 
 sub test_undef_namespace {
+    my $w = XML::Genx->new();
     my $fh = tempfile();
     is( $w->StartDocFile( $fh ), 0, 'StartDocFile(fh)' );
     is(
@@ -103,6 +108,16 @@ sub test_bad_filehandle {
         eval { $w->StartDocFile( $fh ) };
         like( $@, qr/Bad filehandle/i, 'StartDocFile(bad filehandle)' );
     }
+}
+
+sub test_declare_namespace {
+    my $w = XML::Genx->new();
+    my $ns = $w->DeclareNamespace( 'urn:foo', 'foo' );
+    is( $w->LastErrorMessage, 'Success', 'DeclareNamespace()' );
+    isa_ok( $ns, 'XML::Genx::Namespace' );
+    can_ok( $ns, qw( GetNamespacePrefix ) );
+    # This will return undef until we've actually written some XML...
+    is( $ns->GetNamespacePrefix, undef, 'GetNamespacePrefix()' );
 }
 
 sub fh_contents {

@@ -6,8 +6,10 @@
 # name, this is otherwise identical to T_PTROBJ.
 
 genxWriter	T_GENXWRITER
+genxNamespace	T_GENXNAMESPACE
 genxStatus	T_IV
-constUtf8       T_PV
+utf8		T_PV
+constUtf8	T_PV
 
 #########################################################################
 
@@ -18,4 +20,11 @@ T_GENXWRITER
 	    $var = INT2PTR($type, tmp);
 	} else {
 	    Perl_croak(aTHX_ \"$var is not of type XML::Genx\");
+	}
+T_GENXNAMESPACE
+	if (sv_derived_from($arg, \"XML::Genx::Namespace\")) {
+	    IV tmp = SvIV((SV*)SvRV($arg));
+	    $var = INT2PTR($type, tmp);
+	} else {
+	    Perl_croak(aTHX_ \"$var is not of type XML::Genx::Namespace\");
 	}
