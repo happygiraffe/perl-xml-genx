@@ -1,13 +1,14 @@
 Build.PL
 Changes
+example/rssdir.pl
 lib/XML/Genx.pm
 lib/XML/Genx.xs
 Makefile.PL
 MANIFEST
+META.yml
 README
 src/charProps.c
 src/genx.c
 src/genx.h
 t/XML-Genx.t
 typemap
-META.yml
