@@ -127,6 +127,26 @@ static genxSender sender = {
     sender_flush
 };
 
+static void
+croak_on_genx_error( genxWriter w, genxStatus st )
+{
+    char *msg;
+    if ( st == GENX_SUCCESS ) {
+        msg = NULL;
+    } else if ( w ) {
+        msg = genxLastErrorMessage( w );
+    } else {
+        /* If we don't have a writer object handy, make one for this
+         * purpose.  This is slow, but unavoidable. */
+        w = genxNew( NULL, NULL, NULL );
+        msg = genxGetErrorMessage( w, st );
+        genxDispose( w );
+    }
+    if ( msg )
+        croak( msg );
+    return;
+}
+
 MODULE = XML::Genx	PACKAGE = XML::Genx	PREFIX=genx
 
 PROTOTYPES: DISABLE
@@ -421,9 +441,6 @@ utf8
 genxGetNamespacePrefix( ns )
     XML_Genx_Namespace ns
 
-# XXX Need to die on failure...  This is harder than it seems because
-# we don't have the genxWriter object handy to call LastErrorMessage()
-# on...
 genxStatus
 genxAddNamespace(ns, ...);
     XML_Genx_Namespace ns
@@ -437,21 +454,25 @@ genxAddNamespace(ns, ...);
     else
         croak( "Usage: ns->AddNamespace([prefix])" );
     RETVAL = genxAddNamespace( ns, prefix );
+  POSTCALL:
+      croak_on_genx_error( NULL, RETVAL );
   OUTPUT:
     RETVAL
 
 MODULE = XML::Genx	PACKAGE = XML::Genx::Element	PREFIX=genx
 
-# XXX Need to die on failure...
 genxStatus
 genxStartElement( e )
     XML_Genx_Element e
+  POSTCALL:
+      croak_on_genx_error( NULL, RETVAL );
 
 MODULE = XML::Genx	PACKAGE = XML::Genx::Attribute	PREFIX=genx
 
-# XXX Need to die on failure...
 genxStatus
 genxAddAttribute( a, value )
     XML_Genx_Attribute a
     constUtf8 value
+  POSTCALL:
+      croak_on_genx_error( NULL, RETVAL );
 

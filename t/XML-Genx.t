@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 74;
+use Test::More tests => 80;
 
 use_ok('XML::Genx');
 
@@ -278,6 +278,31 @@ sub test_die_on_error {
     my $w = XML::Genx->new;
     eval { $w->EndDocument };
     like( $@, qr/^Call out of sequence/, 'EndDocument() sequence error' );
+
+    # The objects that we create are special cases that need testing
+    # for die() too...
+
+    eval {
+        my $ns = $w->DeclareNamespace( 'urn:foo', 'foo' );
+        isa_ok( $ns, 'XML::Genx::Namespace' );
+        $ns->AddNamespace();
+    };
+    like( $@, qr/^Call out of sequence/, 'ns->AddNamespace() sequence error' );
+
+    eval {
+        my $el = $w->DeclareElement( 'foo' );
+        isa_ok( $el, 'XML::Genx::Element' );
+        $el->StartElement();
+    };
+    like( $@, qr/^Call out of sequence/, 'el->StartElement() sequence error' );
+
+    eval {
+        my $at = $w->DeclareAttribute( 'foo' );
+        isa_ok( $at, 'XML::Genx::Attribute' );
+        $at->AddAttribute( 'bar' );
+    };
+    like( $@, qr/^Call out of sequence/, 'at->AddAttribute() sequence error' );
+
 }
 
 sub fh_contents {
