@@ -8,7 +8,6 @@ README
 src/charProps.c
 src/genx.c
 src/genx.h
-src/ppport.h
 t/XML-Genx.t
 typemap
 META.yml

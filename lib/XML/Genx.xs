@@ -5,8 +5,6 @@
 #include "XSUB.h"
 #include "genx.h"
 
-#include "ppport.h"
-
 MODULE = XML::Genx	PACKAGE = XML::Genx	PREFIX=genx
 
 PROTOTYPES: DISABLE
