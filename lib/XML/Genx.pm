@@ -56,9 +56,22 @@ of the error can be extracted.
 
 Constructor.  Returns a new L<XML::Genx> object.
 
-=item startDocFile ( FILEHANDLE )
+=item StartDocFile ( FILEHANDLE )
 
 Starts writing output to FILEHANDLE.
+
+=item StartDocSender ( CODEREF )
+
+Takes a coderef (C< sub {} >), which gets called each time that genx
+needs to output something.  The subroutine will be called with two
+arguments: the text to output and the name of the function that called
+it (one of I<write>, I<write_bounded>, or I<flush>).
+
+  my $coderef = sub { print $_[0] if $_[1] =~ /write/ };
+  $w->StartDocSender( $coderef );
+
+In the case of I<flush>, the first argument will always be an empty
+string.
 
 =item EndDocument ( )
 

@@ -41,6 +41,84 @@ typedef genxNamespace XML_Genx_Namespace;
 typedef genxElement   XML_Genx_Element;
 typedef genxAttribute XML_Genx_Attribute;
 
+static genxStatus
+sender_write( void *userData, constUtf8 s )
+{
+    dSP;
+    SV *coderef = (SV *)userData;
+    ENTER;
+    SAVETMPS;
+
+    /* Set up the stack. */
+    PUSHMARK(SP);
+    XPUSHs(sv_2mortal(newSVpv((const char *)s, 0)));
+    XPUSHs(sv_2mortal(newSVpv("write", 5)));
+    PUTBACK;
+
+    /* Do the business. */
+    (void)call_sv( coderef, G_VOID );
+
+    SPAGAIN;                    /* XXX Necessary? */
+
+    FREETMPS;
+    LEAVE;
+    return GENX_SUCCESS;
+}
+
+static genxStatus
+sender_write_bounded( void *userData, constUtf8 start, constUtf8 end )
+{
+    dSP;
+    SV *coderef = (SV *)userData;
+    ENTER;
+    SAVETMPS;
+
+    /* Set up the stack. */
+    PUSHMARK(SP);
+    XPUSHs(sv_2mortal(newSVpv((const char *)start, end - start)));
+    XPUSHs(sv_2mortal(newSVpv("write_bounded", 13)));
+    PUTBACK;
+
+    /* Do the business. */
+    (void)call_sv( coderef, G_VOID );
+
+    SPAGAIN;                    /* XXX Necessary? */
+
+    FREETMPS;
+    LEAVE;
+    return GENX_SUCCESS;
+}
+
+static genxStatus
+sender_flush( void *userData )
+{
+    dSP;
+    SV *coderef = (SV *)userData;
+    ENTER;
+    SAVETMPS;
+
+    /* Set up the stack. */
+    PUSHMARK(SP);
+    XPUSHs(sv_2mortal(newSVpv("", 0)));
+    XPUSHs(sv_2mortal(newSVpv("flush", 5)));
+    PUTBACK;
+
+    /* Do the business. */
+    (void)call_sv( coderef, G_VOID );
+
+    SPAGAIN;                    /* XXX Necessary? */
+
+    FREETMPS;
+    LEAVE;
+    return GENX_SUCCESS;
+}
+
+static genxSender sender = {
+    sender_write,
+    sender_write_bounded,
+    sender_flush
+};
+
 MODULE = XML::Genx	PACKAGE = XML::Genx	PREFIX=genx
 
 PROTOTYPES: DISABLE
@@ -73,6 +151,16 @@ genxStartDocFile( w, fh )
   INIT:
     if ( fh == NULL )
       croak( "Bad filehandle" );
+
+genxStatus
+genxStartDocSender( w, coderef )
+    XML_Genx w
+    CV *coderef
+  CODE:
+    genxSetUserData( w, (void *)coderef );
+    RETVAL = genxStartDocSender( w, &sender );
+  OUTPUT:
+    RETVAL
 
 genxStatus
 genxEndDocument( w )

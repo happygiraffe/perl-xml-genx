@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 49;
+use Test::More tests => 54;
 
 use_ok('XML::Genx');
 
@@ -14,6 +14,7 @@ isa_ok( $w, 'XML::Genx' );
 can_ok( $w, qw(
     GetVersion
     StartDocFile
+    StartDocSender
     LastErrorMessage
     GetErrorMessage
     StartElementLiteral
@@ -65,6 +66,12 @@ is(
     test_declared_no_namespace(),
     '<bar baz="quux"></bar>',
     'test_declared_no_namespace() output',
+);
+
+is(
+    test_sender(),
+    '<foo></foo>',
+    'test_sender() output',
 );
 
 sub test_basics {
@@ -181,6 +188,23 @@ sub test_declared_no_namespace {
     is( $w->EndElement(), 0, 'EndElement()' );
     is( $w->EndDocument(), 0, 'EndDocument()' );
     return fh_contents( $fh );
+}
+
+sub test_sender {
+    my $out = '';
+    my $w   = XML::Genx->new;
+    my $coderef = sub {
+        my ( $text, $how ) = @_;
+        $out .= $_[0];
+    };
+    is( $w->StartDocSender( $coderef ), 0, 'StartDocSender()' );
+    is(
+        $w->StartElementLiteral( undef, 'foo' ), 0,
+        'StartElementLiteral(undef,foo)'
+    );
+    is( $w->EndElement,  0, 'EndElement()' );
+    is( $w->EndDocument, 0, 'EndDocument()' );
+    return $out;
 }
 
 sub fh_contents {
