@@ -27,11 +27,16 @@ XML::Genx - Simple, correct XML writer
 
   use XML::Genx;
   my $w = XML::Genx->new;
-  $w->StartDocFile( *STDOUT );
-  $w->StartElementLiteral( 'urn:foo', 'foo' ):
-  $w->AddText( 'bar' );
-  $w->EndElement;
-  $w->EndDocument;
+  $w->StartDocFile( *STDOUT )
+    or die $w->LastErrorMessage;
+  $w->StartElementLiteral( 'urn:foo', 'foo' )
+    or die $w->LastErrorMessage;
+  $w->AddText( 'bar' )
+    or die $w->LastErrorMessage;
+  $w->EndElement
+    or die $w->LastErrorMessage;
+  $w->EndDocument
+    or die $w->LastErrorMessage;
 
 =head1 DESCRIPTION
 
@@ -179,19 +184,17 @@ sits on top of Genx.
 
 =item *
 
-Provide an ability to use genxStartDocSender() so that you can pass in
-code refs that get given strings.  This should be the underpinnings of a
-slightly easier interface than filehandles.
-
-=item *
-
-Make the constants available in Perl.
+Make the constants available in Perl.  I don't think this is needed
+yet.
 
 =item *
 
 Make the interface more Perlish where possible.  I really like the way
 that the Ruby interface uses blocks, but I don't think it'd be as
-practical in Perl...
+practical in Perl.
+
+One thing which would be good would be throwing errors instead of
+returning status codes.
 
 =item *
 
