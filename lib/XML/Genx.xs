@@ -156,8 +156,19 @@ genxStatus
 genxStartDocFile( w, fh )
     XML_Genx w
     FILE *fh
+  PREINIT:
+    struct stat st;
   INIT:
-    if ( fh == NULL )
+    /* 
+     * Sometimes we get back a filehandle with an invalid file
+     * descriptor instead of NULL.  So use fstat() to check that it's
+     * actually live and usable.
+     *
+     * Many thanks to http://www.testdrive.hp.com/ for providing a
+     * service that let me find this out when I couldn't reproduce it
+     * on my own box.
+     */
+    if ( fh == NULL || fstat(fileno(fh), &st) == -1 )
       croak( "Bad filehandle" );
   POSTCALL:
     if ( RETVAL != GENX_SUCCESS ) croak( genxLastErrorMessage( w ) );
