@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 84;
+use Test::More tests => 88;
 
 BEGIN {
     use_ok( 'XML::Genx' );
@@ -91,6 +91,7 @@ is(
 
 test_die_on_error();
 test_constants();
+test_fh_scope();
 
 sub test_basics {
     my $w = XML::Genx->new();
@@ -321,6 +322,20 @@ sub test_constants {
     is( GENX_SUCCESS, 0, 'GENX_SUCCESS' );
     eval { $w->EndDocument };
     ok( $@ == GENX_SEQUENCE_ERROR, 'GENX_SEQUENCE_ERROR' );
+}
+
+sub test_fh_scope {
+    my $w = XML::Genx->new;
+    {
+        my $fh = tempfile();
+        is( $w->StartDocFile( $fh ), 0, 'StartDocFile()' );
+    }
+    is( $w->StartElementLiteral( 'foo' ), 0, 'StartElementLiteral(foo)' );
+    is( $w->EndElement, 0, 'EndElement()' );
+    is( $w->EndDocument, 0, 'EndDocument()' );
+    # We don't actually care what's been written at this point.  Just
+    # that it *has* been written without blowing up.
+    return;
 }
 
 sub fh_contents {
