@@ -4,6 +4,7 @@
 use strict;
 use warnings;
 
+use File::Temp qw( tempfile );
 use Test::More;
 use XML::Genx::Constants qw( GENX_SUCCESS );
 
@@ -11,7 +12,7 @@ eval "use XML::SAX::Base";
 if ( $@ ) {
     plan skip_all => 'Need XML::SAX::Base to run this test.';
 } else {
-    plan tests => 9;
+    plan tests => 12;
 }
 
 use_ok( 'XML::Genx::SAXWriter' );
@@ -36,6 +37,9 @@ can_ok( $w, @sax_methods );
 test_simple();
 test_namespaces();
 test_misc();
+test_send_to_fh();
+test_send_to_filename();
+test_send_to_sub();
 
 sub test_simple {
     my $str;
@@ -126,6 +130,51 @@ sub test_misc {
     $w->comment( { Data => 'END' } );
     is( $w->end_document( {} ), GENX_SUCCESS, 'misc end_document()' );
     is( $str, qq{<?target data?>\n<foo>bar</foo>\n<!--END-->}, 'misc output' );
+}
+
+sub test_send_to_fh {
+    my $fh = tempfile();
+    my $w = XML::Genx::SAXWriter->new( out => $fh );
+    simple_sax_write( $w );
+    is( file_contents( $fh ), '<foo>bar</foo>', 'output to filehandle' );
+}
+
+sub test_send_to_filename {
+    my ( $fh, $fname ) = tempfile( UNLINK => 1 );
+    my $w = XML::Genx::SAXWriter->new( out => $fname );
+    simple_sax_write( $w );
+    is( file_contents( $fh ), '<foo>bar</foo>', 'output to filename' );
+}
+
+sub test_send_to_sub {
+    my $str;
+    my $w = XML::Genx::SAXWriter->new( out => sub { $str .= $_[0] } );
+    simple_sax_write( $w );
+    is( $str, '<foo>bar</foo>', 'output to sub' );
+}
+
+# Convenience call to output a known piece of xml on a given writer.
+sub simple_sax_write {
+    my ( $w ) = @_;
+    $w->start_document( {} );
+    my $el = {
+        Attributes   => {},
+        LocalName    => 'foo',
+        Name         => 'foo',
+        NamespaceURI => '',
+        Prefix       => '',
+    };
+    $w->start_element( $el );
+    $w->characters( { Data => 'bar' } );
+    $w->end_element( $el );
+    return $w->end_document( {} );
+}
+
+sub file_contents {
+    my ( $fh ) = @_;
+    seek $fh, 0, 0 or die "seek: $!\n";
+    local $/;
+    return <$fh>;
 }
 
 # vim: set ai et sw=4 syntax=perl :

@@ -38,9 +38,9 @@ sub start_document {
     } elsif ( ref $self->_out && $self->_out->isa( 'IO::Handle' ) ) {
         $self->_w->StartDocFile( $self->_out );
     } elsif ( defined $self->_out && length $self->_out ) {
-        open( my $fh, '<', $self->_out )
+        open( my $fh, '>', $self->_out )
           or Carp::croak( "open(".$self->_out."): $!" );
-        $self->StartDocFile( $fh );
+        $self->_w->StartDocFile( $fh );
     } else {
         Carp::croak( "start_document: no output specified!" );
     }
