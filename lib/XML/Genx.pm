@@ -246,16 +246,6 @@ sits on top of Genx.
 
 =back
 
-=head1 TODO
-
-=over 4
-
-=item *
-
-Write a SAX output filter using XML::Genx.
-
-=back
-
 =head1 SEE ALSO
 
 L<XML::Genx::Constants>, L<XML::Genx::Simple>.

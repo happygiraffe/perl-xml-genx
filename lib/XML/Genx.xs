@@ -493,7 +493,7 @@ genxDeclareNamespace( w, uri, ... )
     if ( items == 2 )
         prefix = NULL;
     else if ( items == 3 )
-        prefix = ST(2) == &PL_sv_undef ? NULL : (constUtf8)SvPV_nolen(ST(2));
+        prefix = SvOK(ST(2)) ? (constUtf8)SvPV_nolen(ST(2)) : NULL;
     else
         croak( "usage: w->DeclareNamespace(uri,[defaultPrefix])" );
   PPCODE:
@@ -518,7 +518,7 @@ genxDeclareElement( w, ... )
         type = (constUtf8)SvPV_nolen(ST(1));
     } else if ( items == 3 ) {
         /*  Bleargh, would be nice to be able to reuse typemap here */
-        if (ST(1) == &PL_sv_undef) {
+        if (!SvOK(ST(1))) {
             ns = (XML_Genx_Namespace) NULL;
         } else if (sv_derived_from(ST(1), "XML::Genx::Namespace")) {
             IV tmp = SvIV((SV*)SvRV(ST(1)));
@@ -551,7 +551,7 @@ genxDeclareAttribute( w, ... )
         name = (constUtf8)SvPV_nolen(ST(1));
     } else if ( items == 3 ) {
         /*  Bleargh, would be nice to be able to reuse typemap here */
-        if (ST(1) == &PL_sv_undef) {
+        if (!SvOK(ST(1))) {
             ns = (XML_Genx_Namespace) NULL;
         } else if (sv_derived_from(ST(1), "XML::Genx::Namespace")) {
             IV tmp = SvIV((SV*)SvRV(ST(1)));
@@ -600,7 +600,7 @@ genxAddNamespace(ns, ...);
     if ( items == 1 )
         prefix = NULL;
     else if ( items == 2 )
-        prefix = ST(1) == &PL_sv_undef ? NULL : (utf8)SvPV_nolen(ST(1));
+        prefix = SvOK(ST(1)) ? (utf8)SvPV_nolen(ST(1)) : NULL;
     else
         croak( "Usage: ns->AddNamespace([prefix])" );
     RETVAL = genxAddNamespace( ns, prefix );

@@ -7,6 +7,8 @@ abstract: Simple, correct XML writer
 license: bsd
 requires:
   perl: 5.6.1
+recommends:
+  XML::SAX::Base: 0
 provides:
   XML::Genx:
     file: lib/XML/Genx.pm
@@ -14,6 +16,8 @@ provides:
   XML::Genx::Constants:
     file: lib/XML/Genx/Constants.pm
     version: 0.14
+  XML::Genx::SAXWriter:
+    file: lib/XML/Genx/SAXWriter.pm
   XML::Genx::Simple:
     file: lib/XML/Genx/Simple.pm
     version: 0.14

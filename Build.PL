@@ -24,6 +24,7 @@ Module::Build->new(
     module_name        => 'XML::Genx',
     license            => 'bsd',
     requires           => { perl => '5.6.1' },
+    recommends         => { 'XML::SAX::Base' => 0 },
     build_requires     => \%build_requires,
     create_makefile_pl => 'passthrough',
     c_source           => 'src',
