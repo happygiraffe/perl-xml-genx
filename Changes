@@ -1,6 +1,4 @@
-Revision history for Perl extension XML::Genx.
+Revision history for XML::Genx.
 
-0.01  Mon Nov 22 08:22:40 2004
-	- original version; created by h2xs 1.23 with options
-		-A -n XML::Genx
-
+0.01  Sat Nov 27 09:03:47 GMT 2004
+	- Original version.
