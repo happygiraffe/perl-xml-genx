@@ -31,6 +31,7 @@ sub DESTROY {
     my $self = shift;
     # Clean up any loose pointers we have...
     $self->_UndeclareElements;
+    $self->_UndeclareAttributes;
 
     # And pass control back to our parents.
     $self->SUPER::DESTROY;
