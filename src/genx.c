@@ -1937,4 +1937,30 @@ char * genxGetVersion()
 {
   return GENX_VERSION;
 }
- 
+
+/*
+ * Additions explicitly for XML::Genx.
+ */
+
+genxStatus genxGetStatusCode(genxWriter w)
+{
+  return w->status;
+}
+
+/* Provide a backlink to the creator. */
+genxWriter genxGetNamespaceWriter(genxNamespace ns)
+{
+  return ns->writer;
+}
+
+genxWriter genxGetElementWriter(genxElement e)
+{
+  return e->writer;
+}
+
+genxWriter genxGetAttributeWriter(genxAttribute a)
+{
+  return a->writer;
+}
+
+/* vim: set ai et sw=2 : */

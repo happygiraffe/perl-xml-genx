@@ -281,6 +281,14 @@ char * genxLastErrorMessage(genxWriter w);
  * return version
  */
 char * genxGetVersion();
+
+/*
+ * Additions explicitly for XML::Genx.
+ */
+genxStatus genxGetStatusCode(genxWriter w);
+genxWriter genxGetNamespaceWriter(genxNamespace ns);
+genxWriter genxGetElementWriter(genxElement e);
+genxWriter genxGetAttributeWriter(genxAttribute a);
  
 #ifdef __cplusplus
 }
