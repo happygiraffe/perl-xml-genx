@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 23;
+use Test::More tests => 24;
 
 use_ok('XML::Genx');
 
@@ -41,6 +41,8 @@ is(
     '<foo></foo>',
     'test_undef_namespace() output',
 );
+
+test_bad_filehandle();
 
 sub test_basics {
     my $fh = tempfile();
@@ -80,6 +82,19 @@ sub test_undef_namespace {
     is( $w->EndElement,  0, 'EndElement()' );
     is( $w->EndDocument, 0, 'EndDocument()' );
     return fh_contents( $fh );
+}
+
+sub test_bad_filehandle {
+  SKIP: {
+        skip 'Need perl 5.8 for in memory file handles.', 1
+          if $] < 5.008;
+
+        my $txt = '';
+        open( my $fh, '>', \$txt ) or die "open(>\$txt): $!\n";
+        my $w = XML::Genx->new;
+        eval { $w->StartDocFile( $fh ) };
+        like( $@, qr/Bad filehandle/i, 'StartDocFile(bad filehandle)' );
+    }
 }
 
 sub fh_contents {

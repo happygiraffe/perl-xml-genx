@@ -30,15 +30,13 @@ DESTROY( w )
   CODE:
     genxDispose( w );
 
-# I'm going to use the file based solution for now, since it's easier
-# to work with in XS.
-#
-# XXX We need to croak if fileno is -1, since that really doesn't work
-# well.  It's what you get when you pass in an IO::Scalar or similiar.
 genxStatus
 genxStartDocFile( w, fh )
     genxWriter w
     FILE *fh
+  INIT:
+    if ( fh == NULL )
+      croak( "Bad filehandle" );
 
 genxStatus
 genxEndDocument( w )
