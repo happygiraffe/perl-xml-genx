@@ -1,6 +1,10 @@
 Revision history for XML::Genx.
 
-0.12  Tue Mar  1 11:22:13 GMT 2005
+0.12  Tue Mar  1 20:53:18 GMT 2005
+	- [INCOMPATIBLE CHANGE] Get rid of the dual valued scalar
+	  exception idea.  The way it was implemented meant that you
+	  didn't get the line number information about where the exception
+	  actually happened.
 	- Cope with either a glob or a reference to a glob in
           StartDocFile().
 

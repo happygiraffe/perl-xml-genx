@@ -45,17 +45,12 @@ XML::Genx::Constants - constants for genx
   my $w = XML::Genx->new;
   eval { $w->EndDocument };
   die "programmer error"
-    if $@ == GENX_SEQUENCE_ERROR;
+    if $@ && $w->LastErrorCode == GENX_SEQUENCE_ERROR;
 
 =head1 DESCRIPTION
 
 This module provides constants for use with XML::Genx.  They are
-mostly used for checking the value of an exception that's been
-thrown. Exceptions that XML::Genx throws are set up as "dual valued
-scalars".  This means that they contain both a string and a number in
-the same part.  So if you compare them to one of the constants
-exported by this module, they do the right thing.  This is similiar to
-the $! variable.
+mostly used for verifying which exception that has been thrown.
 
 =head1 EXPORTS
 
@@ -104,6 +99,8 @@ The following constants are available for exporting.
 =back
 
 =head1 SEE ALSO
+
+L<XML::Genx>, L<XML::Genx::Simple>.
 
 A full explanation of what the constants mean is at
 L<http://www.tbray.org/ongoing/When/200x/2004/02/20/GenxStatus#declarations>.

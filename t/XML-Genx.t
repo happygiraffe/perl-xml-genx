@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 90;
+use Test::More tests => 92;
 
 BEGIN {
     use_ok( 'XML::Genx' );
@@ -282,18 +282,23 @@ sub test_sender {
 
 sub test_die_on_error {
     my $w = XML::Genx->new;
+    cmp_ok( $w->LastErrorCode, '==', 0, 'LastErrorCode() after new()' );
     eval { $w->EndDocument };
-    # The exception object should be a dualvar scalar: both number and
-    # string at the same time.  The only guarantee about the number we
-    # have is that success is zero, so we test for greater than
-    # that. The reason for doing this is that it'll make testing
-    # against constants easier later on.
-    ok( $@ > 0, 'EndDocument() sequence error is a dualvar.' );
     like( $@, qr/^Call out of sequence/, 'EndDocument() sequence error' )
-      or diag $@;
+        or diag $@;
+
+    # This is needed because I originally wrote a version that used
+    # exception objects where I shouldn't have.  Now that I've switched
+    # to plain strings, I expect them to report where they have croaked.
+    my $thisfile = __FILE__;
+    like( $@, qr/ at $thisfile/, 'Exception reports location.' );
+
+    # This is the new way to determine more exactly what happened.
+    cmp_ok( $w->LastErrorCode, '==', 8, 'LastErrorCode() after an exception.' );
 
     # The objects that we create are special cases that need testing
-    # for die() too...
+    # for die() too...  Unfortunately, they really do have nowhere to
+    # store the status code so we can't test for that as well. :(
 
     eval {
         my $ns = $w->DeclareNamespace( 'urn:foo', 'foo' );
@@ -322,7 +327,8 @@ sub test_constants {
     my $w = XML::Genx->new;
     is( GENX_SUCCESS, 0, 'GENX_SUCCESS' );
     eval { $w->EndDocument };
-    ok( $@ == GENX_SEQUENCE_ERROR, 'GENX_SEQUENCE_ERROR' );
+    cmp_ok( $w->LastErrorCode, '==', GENX_SEQUENCE_ERROR,
+        'GENX_SEQUENCE_ERROR' );
 }
 
 sub test_fh_scope {

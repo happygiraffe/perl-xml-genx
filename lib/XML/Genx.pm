@@ -102,6 +102,17 @@ Output a closing tag for the currently open element.
 
 Returns the string value of the last error.
 
+=item LastErrorCode ( )
+
+Returns the integer status code of the last error.  This can be
+compared to one of the values in L<XML::Genx::Constants>.
+
+This will return zero if no error condition is present.
+
+The same value will be returned by the object until the next exception
+is thrown (ie: it does not get cleared by further calls to genx
+methods).
+
 =item GetErrorMessage ( CODE )
 
 Given a genxStatus code, return the equivalent string.
@@ -248,7 +259,7 @@ Write a SAX output filter using XML::Genx.
 
 =head1 SEE ALSO
 
-L<XML::Genx::Simple>
+L<XML::Genx::Constants>, L<XML::Genx::Simple>.
 
 L<http://www.tbray.org/ongoing/When/200x/2004/02/20/GenxStatus>
 
