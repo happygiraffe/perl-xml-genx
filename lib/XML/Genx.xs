@@ -44,14 +44,31 @@ genxStatus
 genxEndDocument( w )
     genxWriter w
 
+# Because xmlns can be NULL, we need to allow undef here.  However,
+# the typemap for "char*" throws a warning if you pass that in.
+# Instead, we have to take an SV and wing it ourselves.  That's a
+# *lot* more work...
 genxStatus
-genxStartElementLiteral( w, xmlns, name )
+genxStartElementLiteral( w, xmlns_sv, name )
     genxWriter w
-    char *xmlns
-    char *name
+    SV*        xmlns_sv
+    constUtf8  name
+  PREINIT:
+    constUtf8  xmlns;
   INIT:
-    /* Empty string means "no namespace". */
-    if ( *xmlns == '\0' ) xmlns = NULL;
+    /* Undef means "no namespace". */
+    if ( xmlns_sv == &PL_sv_undef ) {
+        xmlns = NULL;
+    } else {
+        xmlns = (constUtf8)SvPV_nolen(xmlns_sv);
+       /* Empty string means "no namespace" too. */
+       if ( *xmlns == '\0' )
+           xmlns = NULL;
+    }
+  CODE:
+    RETVAL = genxStartElementLiteral( w, xmlns, name );
+  OUTPUT:
+    RETVAL
 
 genxStatus
 genxEndElement( w )
