@@ -1,6 +1,7 @@
 Revision history for XML::Genx.
 
 0.08  Sat Dec  4 22:52:56 GMT 2004
+	- Implement XML::Genx::Constants.
 	- Make the thrown exceptionn be a dual valued scalar.
 	- Cleanup declared attributes in XML::Genx::Simple.
 

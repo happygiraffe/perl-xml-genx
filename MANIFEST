@@ -3,6 +3,7 @@ Changes
 example/rssdir.pl
 lib/XML/Genx.pm
 lib/XML/Genx.xs
+lib/XML/Genx/Constants.pm
 lib/XML/Genx/Simple.pm
 Makefile.PL
 MANIFEST

@@ -233,11 +233,6 @@ sits on top of Genx.
 
 =item *
 
-Make the constants available in Perl.  I don't think this is needed
-yet.
-
-=item *
-
 Clean up the XS a little; there's a lot of cut'n'paste in there.
 
 =back

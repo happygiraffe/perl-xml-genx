@@ -5,9 +5,12 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 81;
+use Test::More tests => 84;
 
-use_ok('XML::Genx');
+BEGIN {
+    use_ok( 'XML::Genx' );
+    use_ok( 'XML::Genx::Constants', qw( GENX_SUCCESS GENX_SEQUENCE_ERROR ) );
+}
 
 my $w = XML::Genx->new();
 isa_ok( $w, 'XML::Genx' );
@@ -87,6 +90,7 @@ is(
 );
 
 test_die_on_error();
+test_constants();
 
 sub test_basics {
     my $w = XML::Genx->new();
@@ -310,6 +314,13 @@ sub test_die_on_error {
     };
     like( $@, qr/^Call out of sequence/, 'at->AddAttribute() sequence error' );
 
+}
+
+sub test_constants {
+    my $w = XML::Genx->new;
+    is( GENX_SUCCESS, 0, 'GENX_SUCCESS' );
+    eval { $w->EndDocument };
+    ok( $@ == GENX_SEQUENCE_ERROR, 'GENX_SEQUENCE_ERROR' );
 }
 
 sub fh_contents {
