@@ -85,6 +85,10 @@ Given a genxStatus code, return the equivalent string.
 
 Output STRING.
 
+=item AddCharacter ( C )
+
+Output the Unicode character with codepoint C (an integer).
+
 =item Comment ( STRING )
 
 Output STRING as an XML comment.

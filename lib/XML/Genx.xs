@@ -111,6 +111,11 @@ genxAddText( w, start )
     constUtf8 start
 
 genxStatus
+genxAddCharacter( w, c )
+    genxWriter w
+    int c
+
+genxStatus
 genxComment( w, text )
     genxWriter w
     constUtf8 text

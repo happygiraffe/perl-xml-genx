@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 26;
+use Test::More tests => 27;
 
 use_ok('XML::Genx');
 
@@ -31,7 +31,7 @@ is(
     test_basics(),
     '<!--hello world-->
 <?ping pong?>
-<g1:foo xmlns:g1="urn:foo" g1:baz="quux">bar</g1:foo>',
+<g1:foo xmlns:g1="urn:foo" g1:baz="quux">bar!</g1:foo>',
     'test_basics() output'
 );
 
@@ -62,6 +62,7 @@ sub test_basics {
     is( $w->AddAttributeLiteral( 'urn:foo', 'baz', 'quux' ),
         0, 'AddAttributeLiteral(urn:foo,baz,quux)' );
     is( $w->AddText( 'bar' ), 0, 'AddText(bar)' );
+    is( $w->AddCharacter( ord( "!" ) ), 0, 'AddCharacter(ord(!))' );
     is( $w->EndElement,       0, 'EndElement()' );
     is( $w->EndDocument,      0, 'EndDocument()' );
     return fh_contents( $fh );
