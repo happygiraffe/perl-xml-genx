@@ -311,9 +311,8 @@ genxEndDocument( w )
     XML_Genx w
   PREINIT:
     HV *self;
-    SV **svp;
   POSTCALL:
-    self = (HV *)genxGetUserData( w );;
+    self = (HV *)genxGetUserData( w );
     /* Decrement the reference count on the filehandle. */
     hv_delete( self, "fh", 2, G_DISCARD );
     croak_on_genx_error( w, RETVAL );
