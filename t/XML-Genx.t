@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 18;
+use Test::More tests => 23;
 
 use_ok('XML::Genx');
 
