@@ -1,5 +1,9 @@
 Revision history for XML::Genx.
 
+0.10  Thu Feb 17 20:40:03 GMT 2005
+	- Implement StartDocString() for the common case of outputting
+          to a string.
+
 0.09  Tue Dec 14 22:51:25 GMT 2004
 	- Ensure that we take a reference to the filehandle being
 	  passed in to StartDocFile() so that it doesn't get closed

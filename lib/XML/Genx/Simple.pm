@@ -100,6 +100,15 @@ simpler in the common case.
 
 =over 4
 
+=item StartDocString ( )
+
+Starts a new document, and collects the result into a string.
+
+=item GetDocString ( )
+
+Returns the string from the current writer object.  B<NB>: This is only
+guaranteed to be well-formed XML after you have called EndDocument().
+
 =item Element ( NAME, TEXT, [ATTRS] )
 
 Outputs E<lt>NAMEE<gt>TEXTE<lt>/NAMEE<gt> in one go.  NAME can be

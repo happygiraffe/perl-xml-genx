@@ -126,6 +126,49 @@ static genxSender sender = {
     sender_flush
 };
 
+/*
+ * Some helper functions for automatically appending genx output into a
+ * string.  Thanks to shiny genx neatness, we can store the SV that
+ * we're outputting to in the userdata field.
+ */
+
+static HV *string_sender_store;
+
+static genxStatus
+string_sender_write( void *userData, constUtf8 s )
+{
+    SV *str = (SV *)userData;
+    ENTER;
+    SAVETMPS;
+    sv_catpv( str, s );
+    FREETMPS;
+    LEAVE;
+    return GENX_SUCCESS;
+}
+
+static genxStatus
+string_sender_write_bounded( void *userData, constUtf8 start, constUtf8 end )
+{
+    SV *str = (SV *)userData;
+    ENTER;
+    SAVETMPS;
+    sv_catpvn( str, start, end - start );
+    FREETMPS;
+    LEAVE;
+    return GENX_SUCCESS;
+}
+
+static genxStatus
+string_sender_flush( void *userData ) {
+    return GENX_SUCCESS;
+}
+
+static genxSender string_sender = {
+    string_sender_write,
+    string_sender_write_bounded,
+    string_sender_flush
+};
+
 static void
 croak_on_genx_error( genxWriter w, genxStatus st )
 {
@@ -683,5 +726,31 @@ GENX_BAD_DEFAULT_DECLARATION()
   PROTOTYPE:
   CODE:
     RETVAL = GENX_BAD_DEFAULT_DECLARATION;
+  OUTPUT:
+    RETVAL
+
+MODULE = XML::Genx	PACKAGE = XML::Genx::Simple	PREFIX=genx
+
+# Our own add on.  This provides a way of getting the output of genx
+# into a string without the overhead of popping back into Perl the whole
+# time.
+genxStatus
+genxStartDocString( w )
+    XML_Genx w
+  PREINIT:
+    SV *str = newSVpv("", 0);
+  CODE:
+    /* genx guarantees that this will be so */
+    SvUTF8_on( str );
+    genxSetUserData( w, (void *)str );
+    RETVAL = genxStartDocSender( w, &string_sender );
+  OUTPUT:
+    RETVAL
+
+SV *
+genxGetDocString( w )
+    XML_Genx w
+  CODE:
+    RETVAL = (SV *)genxGetUserData( w );
   OUTPUT:
     RETVAL

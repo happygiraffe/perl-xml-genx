@@ -4,13 +4,13 @@
 use strict;
 use warnings;
 
-use Test::More tests => 5;
+use Test::More tests => 8;
 
 use_ok( 'XML::Genx::Simple' );
 
 my $w = XML::Genx::Simple->new();
 isa_ok( $w, 'XML::Genx' );
-can_ok( $w, qw( Element ) );
+can_ok( $w, qw( Element StartDocString GetDocString ) );
 
 my $out = '';
 eval {
@@ -24,5 +24,20 @@ eval {
 is( $@, '', 'That went well.' );
 is( $out, '<root><foo id="1">bar</foo><bar id="2">baz</bar></root>',
     'Element()' );
+
+#---------------------------------------------------------------------
+
+my $warn;
+eval {
+    local $SIG{__WARN__} = sub { $warn = "@_" };
+    $w->StartDocString;
+    $w->StartElementLiteral('foo');
+    $w->AddText('bar');
+    $w->EndElement;
+    $w->EndDocument;
+};
+is( $@, '', 'That went well too' );
+is( $w->GetDocString, '<foo>bar</foo>', 'StartDocString()' );
+is( $warn, undef, 'StartDocString() no warnings' );
 
 # vim: set ai et sw=4 syntax=perl :
