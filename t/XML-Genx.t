@@ -19,6 +19,7 @@ can_ok( $w, qw(
     StartDocFile
     StartDocSender
     LastErrorMessage
+    LastErrorCode
     GetErrorMessage
     StartElementLiteral
     AddAttributeLiteral

@@ -435,13 +435,8 @@ genxLastErrorMessage( w )
 int
 genxLastErrorCode( w )
     XML_Genx w
-  PREINIT:
-    HV *self;
-    SV **svp;
   CODE:
-    self = (HV *)genxGetUserData( w );
-    svp = hv_fetch( self, "status", 6, 0 );
-    RETVAL = svp != NULL ? SvIV(*svp) : 0;
+    RETVAL = genxGetStatusCode( w );
   OUTPUT:
     RETVAL
 

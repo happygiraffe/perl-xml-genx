@@ -109,9 +109,8 @@ compared to one of the values in L<XML::Genx::Constants>.
 
 This will return zero if no error condition is present.
 
-The same value will be returned by the object until the next exception
-is thrown (ie: it does not get cleared by further calls to genx
-methods).
+This value cannot be relied upon to stay the same after further method
+calls to the same object.
 
 =item GetErrorMessage ( CODE )
 
