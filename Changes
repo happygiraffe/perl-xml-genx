@@ -1,7 +1,8 @@
 Revision history for XML::Genx.
 
-0.02  Sat Nov 27 18:20:36 GMT 2004
-	- ...
+0.02  Sat Nov 27 20:49:47 GMT 2004
+	- Fixed compilation warnings about "cast to pointer from
+	  integer of different size".
 
 0.01  Sat Nov 27 09:03:47 GMT 2004
 	- Original version.
