@@ -1,6 +1,8 @@
 Revision history for XML::Genx.
 
 0.06  Thu Dec  2 10:58:42 GMT 2004
+	- Make a missing or undef prefix argument mean auto-create a
+	  prefix instead.
 	- Add missing AddNamespace() on to namespace object.
 
 0.05  Thu Dec  2 01:13:22 GMT 2004
