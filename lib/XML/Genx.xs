@@ -166,6 +166,25 @@ genxDeclareNamespace( w, uri, prefix_sv )
         XSRETURN_UNDEF;
     }
 
+void
+genxDeclareElement( w, ns, type )
+    genxWriter    w
+    genxNamespace ns
+    constUtf8     type
+  PREINIT:
+    genxStatus  st;
+    genxElement el;
+  PPCODE:
+    el = genxDeclareElement( w, ns, type, &st );
+    if ( el && st == GENX_SUCCESS ) {
+        ST( 0 ) = sv_newmortal();
+        sv_setref_pv( ST(0), "XML::Genx::Element", (void*)el );
+        SvREADONLY_on(SvRV(ST(0)));
+        XSRETURN( 1 );
+    } else {
+        XSRETURN_UNDEF;
+    }
+
 MODULE = XML::Genx	PACKAGE = XML::Genx::Namespace	PREFIX=genx
 
 utf8

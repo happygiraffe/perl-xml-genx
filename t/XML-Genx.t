@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 31;
+use Test::More tests => 33;
 
 use_ok('XML::Genx');
 
@@ -50,6 +50,7 @@ is(
 
 test_bad_filehandle();
 test_declare_namespace();
+test_declare_element();
 
 sub test_basics {
     my $w = XML::Genx->new();
@@ -118,6 +119,14 @@ sub test_declare_namespace {
     can_ok( $ns, qw( GetNamespacePrefix ) );
     # This will return undef until we've actually written some XML...
     is( $ns->GetNamespacePrefix, undef, 'GetNamespacePrefix()' );
+}
+
+sub test_declare_element {
+    my $w = XML::Genx->new();
+    my $ns = $w->DeclareNamespace( 'urn:foo', 'foo' );
+    my $el = $w->DeclareElement( $ns, 'wibble' );
+    is( $w->LastErrorMessage, 'Success', 'DeclareElement()' );
+    isa_ok( $el, 'XML::Genx::Element' );
 }
 
 sub fh_contents {
