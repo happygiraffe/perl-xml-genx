@@ -70,8 +70,7 @@ needs to output something.  CALLBACK will be called with two
 arguments: the text to output and the name of the function that called
 it (one of I<write>, I<write_bounded>, or I<flush>).
 
-  my $coderef = sub { print $_[0] if $_[1] =~ /write/ };
-  $w->StartDocSender( $coderef );
+  $w->StartDocSender( sub { print $_[0] } );
 
 In the case of I<flush>, the first argument will always be an empty
 string.
