@@ -1,5 +1,8 @@
 Revision history for XML::Genx.
 
+0.11  Sat Feb 19 18:17:12 GMT 2005
+	- Internal reorganisation to avoid global variables.
+
 0.10  Thu Feb 17 20:40:03 GMT 2005
 	- Add a small benchmark.
 	- Implement StartDocString() for the common case of outputting
