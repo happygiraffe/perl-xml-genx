@@ -104,6 +104,9 @@ simpler in the common case.
 
 Starts a new document, and collects the result into a string.
 
+This method is offered as an extension to the genx API since it is
+significantly quicker.  Many thanks to A. Pagaltzis for suggesting it.
+
 =item GetDocString ( )
 
 Returns the string from the current writer object.  B<NB>: This is only
