@@ -114,12 +114,12 @@ Returns a new namespace object.
 =item DeclareElement ( NS, NAME )
 
 Returns a new element object.  NS must an object returned by
-DeclareNamespace().
+DeclareNamespace(), or undef to indicate no namespace.
 
 =item DeclareAttribute ( NS, NAME )
 
 Returns a new attribute object.  NS must an object returned by
-DeclareNamespace().
+DeclareNamespace(), or undef to indicate no namespace.
 
 =back
 

@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 43;
+use Test::More tests => 49;
 
 use_ok('XML::Genx');
 
@@ -59,6 +59,12 @@ is(
     test_declared_in_use(),
     '<foo:bar xmlns:foo="urn:foo" foo:baz="quux"></foo:bar>',
     'test_declared_in_use() output',
+);
+
+is(
+    test_declared_no_namespace(),
+    '<bar baz="quux"></bar>',
+    'test_declared_no_namespace() output',
 );
 
 sub test_basics {
@@ -153,6 +159,20 @@ sub test_declared_in_use {
     my $ns = $w->DeclareNamespace( 'urn:foo', 'foo' );
     my $el = $w->DeclareElement( $ns, 'bar' );
     my $at = $w->DeclareAttribute( $ns, 'baz' );
+    my $fh = tempfile();
+
+    is( $w->StartDocFile( $fh ), 0, 'StartDocFile()' );
+    is( $el->StartElement(), 0, 'StartElement()' );
+    is( $at->AddAttribute( 'quux' ), 0, 'AddAttribute()' );
+    is( $w->EndElement(), 0, 'EndElement()' );
+    is( $w->EndDocument(), 0, 'EndDocument()' );
+    return fh_contents( $fh );
+}
+
+sub test_declared_no_namespace {
+    my $w = XML::Genx->new();
+    my $el = $w->DeclareElement( undef, 'bar' );
+    my $at = $w->DeclareAttribute( undef, 'baz' );
     my $fh = tempfile();
 
     is( $w->StartDocFile( $fh ), 0, 'StartDocFile()' );
