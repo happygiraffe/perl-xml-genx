@@ -30,6 +30,16 @@
 #include "XSUB.h"
 #include "genx.h"
 
+/* 
+ * We use a typemap to change the underscore into a double colon.
+ * This makes it easier to get things of the right class used.
+ */
+
+typedef genxWriter    XML_Genx;
+typedef genxNamespace XML_Genx_Namespace;
+typedef genxElement   XML_Genx_Element;
+typedef genxAttribute XML_Genx_Attribute;
+
 /*
  * Initialize the hash inside the writer, reusing the existing one if
  * possible.  This should be called by each StartDocFoo().
@@ -84,16 +94,6 @@ dump_self( genxWriter w, const char *msg )
     FREETMPS;
     LEAVE;
 }
-
-/* 
- * We use a typemap to change the underscore into a double colon.
- * This makes it easier to get things of the right class used.
- */
-
-typedef genxWriter    XML_Genx;
-typedef genxNamespace XML_Genx_Namespace;
-typedef genxElement   XML_Genx_Element;
-typedef genxAttribute XML_Genx_Attribute;
 
 static genxStatus
 sender_write( void *userData, constUtf8 s )
