@@ -27,16 +27,15 @@ XML::Genx - Simple, correct XML writer
 
   use XML::Genx;
   my $w = XML::Genx->new;
-  $w->StartDocFile( *STDOUT )
-    or die $w->LastErrorMessage;
-  $w->StartElementLiteral( 'urn:foo', 'foo' )
-    or die $w->LastErrorMessage;
-  $w->AddText( 'bar' )
-    or die $w->LastErrorMessage;
-  $w->EndElement
-    or die $w->LastErrorMessage;
-  $w->EndDocument
-    or die $w->LastErrorMessage;
+  eval {
+      # <foo>bar</foo>
+      $w->StartDocFile( *STDOUT );
+      $w->StartElementLiteral( undef, 'foo' );
+      $w->AddText( 'bar' );
+      $w->EndElement;
+      $w->EndDocument;
+  };
+  die "Writing XML failed: $@" if $@;
 
 =head1 DESCRIPTION
 
@@ -51,9 +50,8 @@ I<beta5>.
 
 =head1 METHODS
 
-Unless otherwise stated, all methods return a genxStatus code.  This
-will be zero for success, or nonzero otherwise.  A textual explanation
-of the error can be extracted.
+All methods will die() when they encounter an error.  Otherwise they
+return zero.
 
 =over 4
 
@@ -192,9 +190,6 @@ yet.
 Make the interface more Perlish where possible.  I really like the way
 that the Ruby interface uses blocks, but I don't think it'd be as
 practical in Perl.
-
-One thing which would be good would be throwing errors instead of
-returning status codes.
 
 =item *
 

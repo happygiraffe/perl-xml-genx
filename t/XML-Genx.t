@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 55;
+use Test::More tests => 56;
 
 use_ok('XML::Genx');
 
@@ -73,6 +73,8 @@ is(
     "<foo>\x{0100}dam</foo>",
     'test_sender() output',
 );
+
+test_die_on_error();
 
 sub test_basics {
     my $w = XML::Genx->new();
@@ -202,6 +204,12 @@ sub test_sender {
     is( $w->EndElement,  0, 'EndElement()' );
     is( $w->EndDocument, 0, 'EndDocument()' );
     return $out;
+}
+
+sub test_die_on_error {
+    my $w = XML::Genx->new;
+    eval { $w->EndDocument };
+    like( $@, qr/^Call out of sequence/, 'EndDocument() sequence error' );
 }
 
 sub fh_contents {
