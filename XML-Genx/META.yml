@@ -1,0 +1,14 @@
+--- #YAML:1.0
+name: XML-Genx
+version: 0.01
+author:
+  - Dominic Mitchell, E<lt>dom@happygiraffe.netE<gt>
+abstract: Simple, correct XML writer
+license: bsd
+requires:
+  perl: 5.6.1
+provides:
+  XML::Genx:
+    file: lib/XML/Genx.pm
+    version: 0.01
+generated_by: Module::Build version 0.2604

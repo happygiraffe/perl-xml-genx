@@ -1,0 +1,26 @@
+# @(#) $Id$
+
+# T_PTROBJ_SPECIAL definition derived from the example in perlxs(1).
+
+XML_Genx		T_PTROBJ_SPECIAL
+XML_Genx_Namespace	T_PTROBJ_SPECIAL
+XML_Genx_Element	T_PTROBJ_SPECIAL
+XML_Genx_Attribute	T_PTROBJ_SPECIAL
+genxStatus		T_IV
+utf8			T_PV
+constUtf8		T_PV
+
+INPUT
+T_PTROBJ_SPECIAL
+	if ($arg == &PL_sv_undef) {
+	    $var = ($type) NULL;
+	} else if (sv_derived_from($arg, \"${(my $ntt=$ntype)=~s/_/::/g;\$ntt}\")) {
+	    IV tmp = SvIV((SV*)SvRV($arg));
+	    $var = ($type) tmp;
+	} else {
+	    croak(\"$var is not undef or of type ${(my $ntt=$ntype)=~s/_/::/g;\$ntt}\");
+	}
+
+OUTPUT
+T_PTROBJ_SPECIAL
+	sv_setref_pv($arg, \"${(my $ntt=$ntype)=~s/_/::/g;\$ntt}\",(void*)$var);
