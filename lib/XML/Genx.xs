@@ -48,6 +48,43 @@ initSelfUserData( genxWriter w )
     return self;
 }
 
+/* DEBUG */
+
+static void
+dump_self( genxWriter w, const char *msg )
+{
+    dSP;
+    HV *self = (HV *)genxGetUserData( w );
+    CV *dump;
+    ENTER;
+    SAVETMPS;
+
+    /* Set up the stack. */
+    PUSHMARK(SP);
+    /* Don't bother creating a reference here. */
+    XPUSHs((SV *)self);
+    PUTBACK;
+
+    SPAGAIN;                    /* XXX Necessary? */
+
+    if ( msg )
+        warn( msg );
+
+    if ( self != NULL ) {
+        (void)eval_pv("use Devel::Peek;", TRUE);
+        if ((dump = get_cv("Devel::Peek::Dump", FALSE)) != NULL ) {
+            call_sv( (SV *)dump, G_VOID );
+        } else {
+            warn("Devel::Peek not loaded!");
+        }
+    } else {
+        warn("No hash in self to dump!");
+    }
+
+    FREETMPS;
+    LEAVE;
+}
+
 /* 
  * We use a typemap to change the underscore into a double colon.
  * This makes it easier to get things of the right class used.
