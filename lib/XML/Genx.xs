@@ -121,6 +121,10 @@ genxPI( w, target, text );
     constUtf8 target
     constUtf8 text
 
+genxStatus
+genxUnsetDefaultNamespace( w )
+    genxWriter w
+
 char *
 genxGetVersion( class )
     char * class

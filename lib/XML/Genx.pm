@@ -94,6 +94,15 @@ Output STRING as an XML comment.
 Output a processing instruction, with target TARGET and STRING as the
 body.
 
+=item UnsetDefaultNamespace ( )
+
+Insert an C< xmlns="" > attribute.  Has no effect if the default
+namespace is already in effect.
+
+=item GetVersion ( )
+
+Return the version number of the Genx library in use.
+
 =back
 
 =head1 LIMITATIONS
