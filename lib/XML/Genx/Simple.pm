@@ -139,7 +139,7 @@ L<XML::Genx>.
 
 =head1 AUTHOR
 
-Dominic Mitchell, E<lt>cpan@happygiraffe.netE<gt>
+Dominic Mitchell, E<lt>cpan (at) happygiraffe.netE<gt>
 
 The genx library was created by Tim Bray L<http://www.tbray.org/>.
 

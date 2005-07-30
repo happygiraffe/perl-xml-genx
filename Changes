@@ -1,5 +1,8 @@
 Revision history for XML::Genx.
 
+0.15  Sun Jul 31 00:57:05 BST 2005
+	- Obfuscate my email address in an attempt to curtail spam.
+
 0.14  Wed Mar 16 22:12:34 GMT 2005
 	- Correctly test for undef values.
 	- Implement XML::Genx::SAXWriter, to enable genx to be used at

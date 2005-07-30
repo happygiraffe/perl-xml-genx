@@ -107,7 +107,7 @@ L<http://www.tbray.org/ongoing/When/200x/2004/02/20/GenxStatus#declarations>.
 
 =head1 AUTHOR
 
-Dominic Mitchell, E<lt>cpan@happygiraffe.netE<gt>
+Dominic Mitchell, E<lt>cpan (at) happygiraffe.netE<gt>
 
 The genx library was created by Tim Bray L<http://www.tbray.org/>.
 
