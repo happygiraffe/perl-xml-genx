@@ -7,7 +7,7 @@ use XML::Genx;
 
 use base 'Exporter';
 
-our $VERSION = '0.15';
+our $VERSION = '0.16';
 our @EXPORT_OK = qw(
   GENX_SUCCESS
   GENX_BAD_UTF8
