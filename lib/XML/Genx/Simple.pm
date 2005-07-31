@@ -7,7 +7,7 @@ use warnings;
 
 use base 'XML::Genx';
 
-our $VERSION = '0.14';
+our $VERSION = '0.15';
 
 sub Element {
     my $self = shift;
