@@ -1,5 +1,8 @@
 Revision history for XML::Genx.
 
+0.16  Wed Aug 31 20:55:45 BST 2005
+	- Add POD checking test.
+
 0.15  Sun Jul 31 00:57:05 BST 2005
 	- Obfuscate my email address in an attempt to curtail spam.
 
