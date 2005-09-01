@@ -1,8 +1,8 @@
---- #YAML:1.0
+---
 name: XML-Genx
-version: 0.16
+version: 0.17
 author: ~
-abstract: Simple, correct XML writer
+abstract: 'Simple, correct XML writer'
 license: bsd
 requires:
   perl: 5.6.1
@@ -12,14 +12,14 @@ recommends:
 provides:
   XML::Genx:
     file: lib/XML/Genx.pm
-    version: 0.16
+    version: 0.17
   XML::Genx::Constants:
     file: lib/XML/Genx/Constants.pm
-    version: 0.16
+    version: 0.17
   XML::Genx::SAXWriter:
     file: lib/XML/Genx/SAXWriter.pm
-    version: 0.16
+    version: 0.17
   XML::Genx::Simple:
     file: lib/XML/Genx/Simple.pm
-    version: 0.16
+    version: 0.17
 generated_by: Module::Build version 0.26
