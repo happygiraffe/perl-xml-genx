@@ -25,3 +25,6 @@
 
 # xsubpp creations.
 ^lib/XML/Genx.(c|bs)$
+
+# Devel::Cover bits.
+^cover_db/
