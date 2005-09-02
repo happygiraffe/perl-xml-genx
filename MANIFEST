@@ -14,6 +14,7 @@ README
 src/charProps.c
 src/genx.c
 src/genx.h
+t/01pod-coverage.t
 t/01pod.t
 t/XML-Genx-SAXWriter.t
 t/XML-Genx-Simple.t

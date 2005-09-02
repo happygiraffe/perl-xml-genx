@@ -197,6 +197,35 @@ what SAX is.
 Essentially, this is just a wrapper over L<XML::Genx>, mapping calls
 from SAX to genx.
 
+=head1 METHODS
+
+The following methods are defined as part of the usual
+L<XML::SAX::Base> interface.
+
+=over 4
+
+=item new()
+
+=item characters()
+
+=item comment()
+
+=item end_document()
+
+=item end_element()
+
+=item end_prefix_mapping()
+
+=item processing_instruction()
+
+=item start_document()
+
+=item start_element()
+
+=item start_prefix_mapping()
+
+=back
+
 =head1 VERSION
 
 @(#) $Id$
