@@ -17,12 +17,12 @@ eval {
     $w->StartDocSender( sub { $out .= $_[0] } );
     $w->StartElementLiteral( 'root' );
     $w->Element( foo => 'bar', id => 1 );
-    $w->Element( bar => 'baz', id => 2 );
+    $w->Element( foo => 'baz', id => 2 );
     $w->EndElement;
     $w->EndDocument;
 };
 is( $@, '', 'That went well.' );
-is( $out, '<root><foo id="1">bar</foo><bar id="2">baz</bar></root>',
+is( $out, '<root><foo id="1">bar</foo><foo id="2">baz</foo></root>',
     'Element()' );
 
 #---------------------------------------------------------------------
