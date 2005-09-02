@@ -4,7 +4,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 9;
+use Test::More tests => 11;
 
 use_ok( 'XML::Genx::Simple' );
 
@@ -44,5 +44,17 @@ is( $warn, undef, 'StartDocString() no warnings' );
 
 my $w2 = XML::Genx::Simple->new();
 is( $w2->GetDocString, undef, 'GetDocString() returns undef before use' );
+
+#---------------------------------------------------------------------
+
+# Check that Element can handle predefined element objects.
+eval {
+    $w->StartDocString;
+    my $el = $w->DeclareElement( 'foo' );
+    $w->Element( $el, 'bar' );
+    $w->EndDocument;
+};
+is( $@, '', "Predeclared Element did not grumble" );
+is( $w->GetDocString, '<foo>bar</foo>', ' ... and produced the right output.' );
 
 # vim: set ai et sw=4 syntax=perl :
