@@ -1,5 +1,13 @@
 Revision history for XML::Genx.
 
+0.17  Fri Sep  2 20:34:46 BST 2005
+	- Correct MANIFEST.
+	- Add POD coverage tests.  And POD to XML::Genx::SAXWriter to
+	  satisfy them.
+	- Fix a bug whereby an uninitialized status code would be used
+	  if you attempted to register the same element / namespace /
+	  attribute twice.
+
 0.16  Wed Aug 31 20:55:45 BST 2005
 	- Add POD checking test.
 

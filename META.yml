@@ -22,4 +22,4 @@ provides:
   XML::Genx::Simple:
     file: lib/XML/Genx/Simple.pm
     version: 0.17
-generated_by: Module::Build version 0.26
+generated_by: Module::Build version 0.2611
