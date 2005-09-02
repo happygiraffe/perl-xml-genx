@@ -12,14 +12,14 @@ recommends:
 provides:
   XML::Genx:
     file: lib/XML/Genx.pm
-    version: 0.17
+    version: 0.18
   XML::Genx::Constants:
     file: lib/XML/Genx/Constants.pm
-    version: 0.17
+    version: 0.18
   XML::Genx::SAXWriter:
     file: lib/XML/Genx/SAXWriter.pm
-    version: 0.17
+    version: 0.18
   XML::Genx::Simple:
     file: lib/XML/Genx/Simple.pm
-    version: 0.17
+    version: 0.18
 generated_by: Module::Build version 0.2611
