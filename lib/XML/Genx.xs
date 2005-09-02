@@ -488,7 +488,7 @@ genxDeclareNamespace( w, uri, ... )
   PREINIT:
     constUtf8     prefix;
     XML_Genx_Namespace ns;
-    genxStatus    st;
+    genxStatus    st = GENX_SUCCESS;
   INIT:
     if ( items == 2 )
         prefix = NULL;
@@ -508,7 +508,7 @@ void
 genxDeclareElement( w, ... )
     XML_Genx    w
   PREINIT:
-    genxStatus         st;
+    genxStatus         st = GENX_SUCCESS;
     XML_Genx_Element   el;
     XML_Genx_Namespace ns;
     constUtf8          type;
@@ -541,7 +541,7 @@ void
 genxDeclareAttribute( w, ... )
     XML_Genx    w
   PREINIT:
-    genxStatus         st;
+    genxStatus         st = GENX_SUCCESS;
     XML_Genx_Attribute at;
     XML_Genx_Namespace ns;
     constUtf8          name;
