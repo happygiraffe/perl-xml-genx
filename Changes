@@ -2,6 +2,7 @@ Revision history for XML::Genx.
 
 0.18  Mon Oct  3 22:56:09 BST 2005
 	- Add test for astral characters.
+	- Test non-xml characters.
 
 0.17  Fri Sep  2 20:34:46 BST 2005
 	- Correct MANIFEST.

@@ -5,11 +5,18 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 101;
+use Test::More tests => 107;
 
 BEGIN {
     use_ok( 'XML::Genx' );
-    use_ok( 'XML::Genx::Constants', qw( GENX_SUCCESS GENX_SEQUENCE_ERROR ) );
+    use_ok(
+        'XML::Genx::Constants', qw(
+            GENX_SUCCESS
+            GENX_SEQUENCE_ERROR
+            GENX_BAD_NAME
+            GENX_NON_XML_CHARACTER
+            )
+    );
 }
 
 my $w = XML::Genx->new();
@@ -345,6 +352,34 @@ sub test_die_on_error {
     };
     like( $@, qr/^Call out of sequence/, 'at->AddAttribute() sequence error' );
     cmp_ok( $w->LastErrorCode, '==', GENX_SEQUENCE_ERROR,
+        'LastErrorCode() after an exception.' );
+
+    $w = XML::Genx->new;    # Clear error status.
+    eval { $w->StartElementLiteral( "\x01" ) };
+    like( $@, qr/^Bad NAME/, 'StartElementLiteral() invalid char');
+    cmp_ok( $w->LastErrorCode, '==', GENX_BAD_NAME,
+        'LastErrorCode() after an exception.' );
+
+    $w = XML::Genx->new;    # Clear error status.
+    eval {
+        my $fh = tempfile();
+        $w->StartDocFile( $fh );
+        $w->StartElementLiteral( "foo" );
+        $w->AddAttributeLiteral( "bar" => "\x01" );
+    };
+    like( $@, qr/^Non XML Character/, 'AddAttributeLiteral() invalid char');
+    cmp_ok( $w->LastErrorCode, '==', GENX_NON_XML_CHARACTER,
+        'LastErrorCode() after an exception.' );
+
+    $w = XML::Genx->new;    # Clear error status.
+    eval {
+        my $fh = tempfile();
+        $w->StartDocFile( $fh );
+        $w->StartElementLiteral( "foo" );
+        $w->AddCharacter( 1 );
+    };
+    like( $@, qr/^Non XML Character/, 'AddCharacter() invalid char');
+    cmp_ok( $w->LastErrorCode, '==', GENX_NON_XML_CHARACTER,
         'LastErrorCode() after an exception.' );
 
 }
