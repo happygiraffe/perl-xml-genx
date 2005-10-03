@@ -1,6 +1,6 @@
 ---
 name: XML-Genx
-version: 0.17
+version: 0.18
 author: ~
 abstract: 'Simple, correct XML writer'
 license: bsd
