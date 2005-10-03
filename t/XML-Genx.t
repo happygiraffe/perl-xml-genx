@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 95;
+use Test::More tests => 101;
 
 BEGIN {
     use_ok( 'XML::Genx' );
@@ -88,6 +88,12 @@ is(
     test_sender(),
     "<foo>\x{0100}dam</foo>",
     'test_sender() output',
+);
+
+is(
+    test_astral(),
+    "<monogram-for-earth>\x{1D300}</monogram-for-earth>",
+    'test_astral() output',
 );
 
 test_die_on_error();
@@ -281,6 +287,19 @@ sub test_sender {
     return $out;
 }
 
+sub test_astral {
+    my $w  = XML::Genx->new;
+    my $fh = tempfile();
+
+    is( $w->StartDocFile( $fh ), 0, 'StartDocFile()' );
+    is( $w->StartElementLiteral( undef, 'monogram-for-earth' ),
+        0, 'StartElementLiteral(undef,monogram-for-earth)' );
+    is( $w->AddText( "\x{1D300}" ), 0, 'AddText(*astral-utf8*)' );
+    is( $w->EndElement,             0, 'EndElement()' );
+    is( $w->EndDocument,            0, 'EndDocument()' );
+    return fh_contents( $fh );
+}
+
 sub test_die_on_error {
     my $w = XML::Genx->new;
     cmp_ok( $w->LastErrorCode, '==', 0, 'LastErrorCode() after new()' );
@@ -356,6 +375,7 @@ sub test_scrubtext {
 
 sub fh_contents {
     my $fh = shift;
+    binmode( $fh, ':utf8' );
     seek $fh, 0, 0 or die "seek: $!\n";
     local $/;
     return <$fh>;
