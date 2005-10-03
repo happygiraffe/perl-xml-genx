@@ -314,34 +314,38 @@ sub test_die_on_error {
     like( $@, qr/ at $thisfile/, 'Exception reports location.' );
 
     # This is the new way to determine more exactly what happened.
-    cmp_ok( $w->LastErrorCode, '==', 8, 'LastErrorCode() after an exception.' );
+    cmp_ok( $w->LastErrorCode, '==', GENX_SEQUENCE_ERROR,
+        'LastErrorCode() after an exception.' );
 
-    $w = XML::Genx->new;        # Clear error status.
+    $w = XML::Genx->new;    # Clear error status.
     eval {
         my $ns = $w->DeclareNamespace( 'urn:foo', 'foo' );
         isa_ok( $ns, 'XML::Genx::Namespace' );
         $ns->AddNamespace();
     };
     like( $@, qr/^Call out of sequence/, 'ns->AddNamespace() sequence error' );
-    cmp_ok( $w->LastErrorCode, '==', 8, 'LastErrorCode() after an exception.' );
+    cmp_ok( $w->LastErrorCode, '==', GENX_SEQUENCE_ERROR,
+        'LastErrorCode() after an exception.' );
 
-    $w = XML::Genx->new;        # Clear error status.
+    $w = XML::Genx->new;    # Clear error status.
     eval {
         my $el = $w->DeclareElement( 'foo' );
         isa_ok( $el, 'XML::Genx::Element' );
         $el->StartElement();
     };
     like( $@, qr/^Call out of sequence/, 'el->StartElement() sequence error' );
-    cmp_ok( $w->LastErrorCode, '==', 8, 'LastErrorCode() after an exception.' );
+    cmp_ok( $w->LastErrorCode, '==', GENX_SEQUENCE_ERROR,
+        'LastErrorCode() after an exception.' );
 
-    $w = XML::Genx->new;        # Clear error status.
+    $w = XML::Genx->new;    # Clear error status.
     eval {
         my $at = $w->DeclareAttribute( 'foo' );
         isa_ok( $at, 'XML::Genx::Attribute' );
         $at->AddAttribute( 'bar' );
     };
     like( $@, qr/^Call out of sequence/, 'at->AddAttribute() sequence error' );
-    cmp_ok( $w->LastErrorCode, '==', 8, 'LastErrorCode() after an exception.' );
+    cmp_ok( $w->LastErrorCode, '==', GENX_SEQUENCE_ERROR,
+        'LastErrorCode() after an exception.' );
 
 }
 
