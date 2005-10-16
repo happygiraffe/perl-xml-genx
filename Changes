@@ -1,11 +1,14 @@
 Revision history for XML::Genx.
 
-0.19  Sun Oct 16 09:15:14 BST 2005
+0.19  Sun Oct 16 22:47:27 BST 2005
         - Allow namespace objects to be passed in to
           StartElementLiteral() and AddAttributeLiteral().  This makes
           it much easier to put things into the default namespace.
         - Add a missing "static" declaration to some XS helper
           functions.
+        - Allow multiple different default namespaces inside
+          XML::Genx::SAXWriter.  Previously you would get a "Duplicate
+          Prefix" error.
 
 0.18  Mon Oct  3 22:56:09 BST 2005
         - Add test for astral characters.
