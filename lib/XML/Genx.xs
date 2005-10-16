@@ -45,7 +45,7 @@ typedef genxAttribute XML_Genx_Attribute;
  * possible.  This should be called by each StartDocFoo().
  */
 
-HV *
+static HV *
 initSelfUserData( genxWriter w )
 {
     HV *self = (HV *)genxGetUserData( w );
