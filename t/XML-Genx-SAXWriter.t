@@ -12,7 +12,7 @@ eval "use XML::SAX::Base";
 if ( $@ ) {
     plan skip_all => 'Need XML::SAX::Base to run this test.';
 } else {
-    plan tests => 12;
+    plan tests => 13;
 }
 
 use_ok( 'XML::Genx::SAXWriter' );
@@ -40,6 +40,7 @@ test_misc();
 test_send_to_fh();
 test_send_to_filename();
 test_send_to_sub();
+test_changing_default_namespace();
 
 sub test_simple {
     my $str;
@@ -168,6 +169,44 @@ sub simple_sax_write {
     $w->characters( { Data => 'bar' } );
     $w->end_element( $el );
     return $w->end_document( {} );
+}
+
+# This problem spotted by Aristotle Pagaltzis.
+# http://aspn.activestate.com/ASPN/Mail/Message/perl-xml/2859325
+sub test_changing_default_namespace {
+    my $ATOM_NS  = 'http://www.w3.org/2005/Atom';
+    my $XHTML_NS = 'http://www.w3.org/1999/xhtml';
+
+    my $got;
+    my $w = XML::Genx::SAXWriter->new( out => \$got );
+    $w->start_document();
+    my $ns1 = { Prefix => '', NamespaceURI => $ATOM_NS };
+    $w->start_prefix_mapping( $ns1 );
+    my $e1 = {
+        Name         => 'feed',
+        LocalName    => 'feed',
+        Prefix       => '',
+        NamespaceURI => $ATOM_NS,
+    };
+    $w->start_element( $e1 );
+    my $ns2 = { Prefix => '', NamespaceURI => $XHTML_NS };
+    $w->start_prefix_mapping( $ns2 );
+    my $e2 = {
+        Name         => 'div',
+        LocalName    => 'div',
+        Prefix       => '',
+        NamespaceURI => $XHTML_NS,
+    };
+    $w->start_element( $e2 );
+    $w->characters( { Data => 'foo' } );
+    $w->end_element( $e2 );
+    $w->end_prefix_mapping( $ns2 );
+    $w->end_element( $e1 );
+    $w->end_prefix_mapping( $e1 );
+    $w->end_document();
+    my $expected =
+        qq{<feed xmlns="$ATOM_NS"><div xmlns="$XHTML_NS">foo</div></feed>};
+    is( $got, $expected, 'Changed default namespace correctly' );
 }
 
 sub file_contents {
