@@ -21,7 +21,7 @@ __END__
 
 =head1 NAME
 
-XML::Genx - Simple, correct XML writer
+XML::Genx - A simple, correct XML writer
 
 =head1 SYNOPSIS
 
@@ -42,7 +42,8 @@ XML::Genx - Simple, correct XML writer
 This class is used for generating XML.  The underlying library (genx)
 ensures that the output is well formed, canonical XML.  That is, all
 characters are correctly encoded, namespaces are handled properly and
-so on.
+so on.  If you manage to generate non-well-formed XML using XML::Genx,
+please submit a bug report.
 
 The API is mostly a wrapper over the original C library.  Consult the
 genx documentation for the fine detail.  This code is based on genx
@@ -333,6 +334,35 @@ XML with attributes in a namespace.
 This produces:
 
   <user xmlns:x="http://www.w3.org/1999/xlink" x:href="/user/42">Fred</user>
+
+=item *
+
+Declaring elements.  If you are going to be using the same element many
+times over, it's worthwhile to predeclare it, since genx doesn't have to
+check the validity of the element name on each call.
+
+  $w->StartDocFile( *STDOUT );
+  my $ns = $w->DeclareNamespace( 'http://www.w3.org/1999/xhtml', "" );
+  my $li = $w->DeclareElement( 'li' );
+  $w->StartElementLiteral( 'ul' );
+
+  $li->StartElement();
+  $w->AddText( 'Fred' );
+  $w->EndElement();
+
+  $li->StartElement();
+  $w->AddText( 'Barney' );
+  $w->EndElement();
+
+  $w->EndElement();
+  $w->EndDocument();
+
+This produces:
+
+  <ul xmlns="http://www.w3.org/1999/xhtml"><li>Fred</li><li>Barney</li></ul>
+
+You might also want to look at L<XML::Genx::Simple/Element>, which does
+this for you (when there aren't any namespace involved).
 
 =back
 
