@@ -9,6 +9,8 @@ Revision history for XML::Genx.
         - Allow multiple different default namespaces inside
           XML::Genx::SAXWriter.  Previously you would get a "Duplicate
           Prefix" error.
+        - Make the tests work in perl 5.6.1.  Not sure when I broke
+          this..
 
 0.18  Mon Oct  3 22:56:09 BST 2005
         - Add test for astral characters.

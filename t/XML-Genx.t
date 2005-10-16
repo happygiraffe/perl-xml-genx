@@ -531,7 +531,9 @@ sub test_scrubtext {
 
 sub fh_contents {
     my $fh = shift;
-    binmode( $fh, ':utf8' );
+    # In perl 5.8+, read proper characters.  I /think/ that perl 5.6
+    # tries to autodetect this.
+    binmode( $fh, ':utf8' ) if $] >= 5.008;
     seek $fh, 0, 0 or die "seek: $!\n";
     local $/;
     return <$fh>;
