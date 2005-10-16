@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use File::Temp qw( tempfile );
-use Test::More tests => 107;
+use Test::More tests => 114;
 
 BEGIN {
     use_ok( 'XML::Genx' );
@@ -101,6 +101,12 @@ is(
     test_astral(),
     "<monogram-for-earth>\x{1D300}</monogram-for-earth>",
     'test_astral() output',
+);
+
+is(
+    test_declared_namespace_in_literal(),
+    '<x:foo xmlns:x="urn:foo" x:attr=""></x:foo>',
+    'test_declared_namespace_in_literal() output',
 );
 
 test_die_on_error();
@@ -304,6 +310,22 @@ sub test_astral {
     is( $w->AddText( "\x{1D300}" ), 0, 'AddText(*astral-utf8*)' );
     is( $w->EndElement,             0, 'EndElement()' );
     is( $w->EndDocument,            0, 'EndDocument()' );
+    return fh_contents( $fh );
+}
+
+sub test_declared_namespace_in_literal {
+    my $w  = XML::Genx->new;
+    my $fh = tempfile();
+
+    is( $w->StartDocFile( $fh ), 0, 'StartDocFile()' );
+    my $ns = $w->DeclareNamespace( "urn:foo", "x" );
+    isa_ok( $ns, 'XML::Genx::Namespace' );
+    is( $w->StartElementLiteral( $ns, 'foo' ),
+        0, 'StartElementLiteral(ns,foo)' );
+    is( $w->AddAttributeLiteral( $ns, 'attr', '' ),
+        0, 'AddAttributeLiteral(x:attr)' );
+    is( $w->EndElement,  0, 'EndElement()' );
+    is( $w->EndDocument, 0, 'EndDocument()' );
     return fh_contents( $fh );
 }
 

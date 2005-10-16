@@ -86,13 +86,15 @@ Finishes writing to the output stream.
 
 =item StartElementLiteral ( [NAMESPACE], LOCALNAME )
 
-Starts an element LOCALNAME, in NAMESPACE.  If NAMESPACE is not
-present or undef, or an empty string, no namespace is used.
+Starts an element LOCALNAME, in NAMESPACE.  If NAMESPACE is not present
+or undef, or an empty string, no namespace is used.  NAMESPACE can
+either be a string or an XML::Genx::Namespace object.
 
 =item AddAttributeLiteral ( [NAMESPACE], LOCALNAME, VALUE )
 
 Adds an attribute LOCALNAME, with contents VALUE.  If NAMESPACE is not
-present or undef, or an empty string, no namespace is used.
+present or undef, or an empty string, no namespace is used.  NAMESPACE
+can either be a string or an XML::Genx::Namespace object.
 
 =item EndElement ( )
 

@@ -268,6 +268,30 @@ croak_on_genx_error( genxWriter w, genxStatus st )
         croak( msg );
 }
 
+/*
+ * Extract the namespace URI from an SV.  If it's a string, just use
+ * that string.  If it's a namespace object, extract the uri from there.
+ * If it's undef, return NULL to indicate no namespace.
+ */
+static constUtf8
+sv_to_namespace_uri( SV* thing )
+{
+    /* not defined? */
+    if (!SvTRUE(thing))
+        return NULL;
+
+    if (sv_isobject(thing) && sv_derived_from(thing, "XML::Genx::Namespace")) {
+        /* This is similiar to the typemap T_PTROBJ_SPECIAL. */
+        IV tmp = SvIV((SV*)SvRV(thing));
+        genxNamespace ns = INT2PTR(genxNamespace, tmp);
+        /* I added this "back door" call to genx. */
+        constUtf8 uri = (constUtf8)genxGetNamespaceUri(ns);
+        return uri;
+    } else {
+        return (constUtf8)SvPV_nolen(thing);
+    }
+}
+
 MODULE = XML::Genx	PACKAGE = XML::Genx	PREFIX=genx
 
 PROTOTYPES: DISABLE
@@ -371,7 +395,7 @@ genxStartElementLiteral( w, ... )
         xmlns = NULL;
         name  = (constUtf8)SvPV_nolen(ST(1));
     } else if ( items == 3 ) {
-        xmlns = SvTRUE(ST(1)) ? (constUtf8)SvPV_nolen(ST(1)) : NULL;
+        xmlns = sv_to_namespace_uri(ST(1));
         name  = (constUtf8)SvPV_nolen(ST(2));
     } else {
         croak( "Usage: w->StartElementLiteral([xmlns],name)" );
@@ -397,7 +421,7 @@ genxAddAttributeLiteral( w, ... )
         name  = (constUtf8)SvPV_nolen(ST(1));
         value = (constUtf8)SvPV_nolen(ST(2));
     } else if ( items == 4 ) {
-        xmlns = SvTRUE(ST(1)) ? (constUtf8)SvPV_nolen(ST(1)) : NULL;
+        xmlns = sv_to_namespace_uri(ST(1));
         name  = (constUtf8)SvPV_nolen(ST(2));
         value = (constUtf8)SvPV_nolen(ST(3));
     } else {

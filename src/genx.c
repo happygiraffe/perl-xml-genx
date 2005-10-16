@@ -1963,4 +1963,10 @@ genxWriter genxGetAttributeWriter(genxAttribute a)
   return a->writer;
 }
 
+/* Let the URI be extracted from a namespace object. */
+constUtf8 genxGetNamespaceUri(genxNamespace ns)
+{
+  return ns->name;
+}
+
 /* vim: set ai et sw=2 : */
