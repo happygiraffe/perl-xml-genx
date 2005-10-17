@@ -8,7 +8,7 @@ Revision history for XML::Genx.
           functions.
         - Allow multiple different default namespaces inside
           XML::Genx::SAXWriter.  Previously you would get a "Duplicate
-          Prefix" error.
+          Prefix" error.  Bug spotted by Aristotle Pagaltzis.
         - Make the tests work in perl 5.6.1.  Not sure when I broke
           this..
 
