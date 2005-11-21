@@ -25,12 +25,12 @@ Module::Build->new(
     license     => 'bsd',
     requires    => { perl => '5.6.1' },
     recommends  => {
-        'XML::SAX::Base' => 0,
-        'Test::Pod'      => 0,
+        'XML::SAX::Base'      => 0,
+        'Test::Pod'           => 0,
+        'Test::Pod::Coverage' => 0,
     },
     build_requires     => \%build_requires,
     create_makefile_pl => 'passthrough',
     c_source           => 'src',
     add_to_cleanup     => ['XML-Genx-*'],
 )->create_build_script;
-
