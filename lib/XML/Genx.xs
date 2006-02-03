@@ -206,7 +206,7 @@ string_sender_write( void *userData, constUtf8 s )
     ENTER;
     SAVETMPS;
     if ((svp = hv_fetch( self, "string", 6, 0 )))
-        sv_catpv( *svp, s );
+        sv_catpv( *svp, (const char *)s );
     FREETMPS;
     LEAVE;
     return GENX_SUCCESS;
@@ -220,7 +220,7 @@ string_sender_write_bounded( void *userData, constUtf8 start, constUtf8 end )
     ENTER;
     SAVETMPS;
     if ((svp = hv_fetch( self, "string", 6, 0 )))
-        sv_catpvn( *svp, start, end - start );
+        sv_catpvn( *svp, (const char *)start, end - start );
     FREETMPS;
     LEAVE;
     return GENX_SUCCESS;
@@ -603,7 +603,7 @@ genxScrubText( w, in )
     SV *in
   CODE:
     RETVAL = newSVsv( in );
-    (void)genxScrubText( w, SvPV_nolen( in ), SvPV_nolen( RETVAL ) );
+    (void)genxScrubText( w, (constUtf8) SvPV_nolen( in ), (utf8) SvPV_nolen( RETVAL ) );
     /* Fix up the new length. */
     SvCUR_set( RETVAL, strlen( SvPV_nolen( RETVAL ) ) );
   OUTPUT:
