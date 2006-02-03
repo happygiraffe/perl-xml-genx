@@ -23,6 +23,7 @@ MSG
 Module::Build->new(
     module_name => 'XML::Genx',
     license     => 'bsd',
+    dist_author => 'Dominic Mitchell <cpan(at)happygiraffe.net>',
     requires    => { perl => '5.6.1' },
     recommends  => {
         'XML::SAX::Base'      => 0,
