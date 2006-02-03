@@ -1,8 +1,9 @@
 ---
 name: XML-Genx
-version: 0.19
-author: ~
-abstract: 'A simple, correct XML writer'
+version: 0.20
+author:
+  - Dominic Mitchell <cpan(at)happygiraffe.net>
+abstract: A simple, correct XML writer
 license: bsd
 requires:
   perl: 5.6.1
