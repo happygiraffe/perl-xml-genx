@@ -1,5 +1,9 @@
 Revision history for XML::Genx.
 
+0.21  Fri Mar 10 15:17:59 GMT 2006
+        - Add a missing definition in the header file in order to avoid
+          a warning under -Wall.
+
 0.20  Fri Feb  3 20:41:13 GMT 2006
 	- Fix compile warnings under gcc 4.  Thanks to Daniel Jalkut for
 	  showing me the way to go.

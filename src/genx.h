@@ -289,6 +289,7 @@ genxStatus genxGetStatusCode(genxWriter w);
 genxWriter genxGetNamespaceWriter(genxNamespace ns);
 genxWriter genxGetElementWriter(genxElement e);
 genxWriter genxGetAttributeWriter(genxAttribute a);
+constUtf8 genxGetNamespaceUri(genxNamespace ns);
  
 #ifdef __cplusplus
 }
