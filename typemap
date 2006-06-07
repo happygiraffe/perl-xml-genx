@@ -16,8 +16,8 @@ T_UTF8PV
 	if (!SvUTF8($arg)) {
 		/* Make a mortal copy in order so that we don't leak memory. */
 		SV *tmp = sv_mortalcopy($arg);
-		STRLEN len = sv_utf8_upgrade(tmp);
-		$var = ($type)SvPV(tmp, len);
+		(void)sv_utf8_upgrade(tmp);
+		$var = ($type)SvPV_nolen(tmp);
 	} else {
 		$var = ($type)SvPV_nolen($arg);
 	}
