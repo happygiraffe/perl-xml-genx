@@ -28,3 +28,6 @@
 
 # Devel::Cover bits.
 ^cover_db/
+
+# OSX bits...
+\b\._
