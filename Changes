@@ -1,8 +1,11 @@
 Revision history for XML::Genx.
 
-0.21  Fri Mar 10 15:17:59 GMT 2006
+0.21  Wed Jun  7 07:45:55 BST 2006
         - Add a missing definition in the header file in order to avoid
           a warning under -Wall.
+        - Cope with non-UTF8 strings on input.  If we see something that
+          doesn't have the UTF-8 flag set, convert to UTF-8 before passing
+          to genx.
 
 0.20  Fri Feb  3 20:41:13 GMT 2006
 	- Fix compile warnings under gcc 4.  Thanks to Daniel Jalkut for

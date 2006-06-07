@@ -529,6 +529,18 @@ sub test_scrubtext {
     is( $w->ScrubText( "abc\x01" ), "abc", 'ScrubText() skips non-xml chars' );
 }
 
+sub test_perl_strings {
+    my $w  = XML::Genx->new;
+    my $fh = tempfile();
+    is( $w->StartDocFile( $fh ), 0, 'StartDocFile()' );
+    is( $w->StartElementLiteral('foo'), 0, 'StartElementLiteral()');
+    is( $w->AddText( do { use bytes; "\xA0" } ), 0, 'AddText(\xA0) as bytes' );
+    is( $w->EndElement, 0, 'EndElement()');
+    is( $w->EndDocument, 0, 'EndDocument()');
+    is( fh_contents($fh), "<foo>\xA0</foo>", 'test_perl_strings');
+    return;
+}
+
 sub fh_contents {
     my $fh = shift;
     # In perl 5.8+, read proper characters.  I /think/ that perl 5.6
