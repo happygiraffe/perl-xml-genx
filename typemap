@@ -12,13 +12,14 @@ constUtf8		T_UTF8PV
 
 INPUT
 T_UTF8PV
-	$var = ($type)SvPV_nolen($arg);
 	/* Convert the bytes to UTF-8, whilst leaving the original SV alone. */
 	if (!SvUTF8($arg)) {
 		/* Make a mortal copy in order so that we don't leak memory. */
 		SV *tmp = sv_mortalcopy($arg);
 		STRLEN len = sv_utf8_upgrade(tmp);
 		$var = ($type)SvPV(tmp, len);
+	} else {
+		$var = ($type)SvPV_nolen($arg);
 	}
 T_PTROBJ_SPECIAL
 	if (!SvOK($arg)) {
