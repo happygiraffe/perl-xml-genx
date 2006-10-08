@@ -435,7 +435,7 @@ sub test_die_on_error {
     # exception objects where I shouldn't have.  Now that I've switched
     # to plain strings, I expect them to report where they have croaked.
     my $thisfile = __FILE__;
-    like( $@, qr/ at $thisfile/, 'Exception reports location.' );
+    like( $@, qr/ at \Q$thisfile/, 'Exception reports location.' );
 
     # This is the new way to determine more exactly what happened.
     cmp_ok( $w->LastErrorCode, '==', GENX_SEQUENCE_ERROR,
