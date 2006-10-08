@@ -331,7 +331,7 @@ genxStartDocFile( w, fh )
     XML_Genx w
     FILE *fh
   PREINIT:
-    struct stat st;
+    Stat_t st;
     HV *self;
     SV *fhsv;
   INIT:
