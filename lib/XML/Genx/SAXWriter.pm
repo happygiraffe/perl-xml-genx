@@ -8,7 +8,7 @@ use XML::Genx::Simple;
 
 use base 'XML::SAX::Base';
 
-our $VERSION = '0.21';
+our $VERSION = '0.22';
 
 sub new {
     my $class = shift;
