@@ -1,5 +1,9 @@
 Revision history for XML::Genx.
 
+0.22  Sun Oct  8 18:16:58 BST 2006
+        - Check that everything works correctly on win32, thanks to the
+          excellent Strawberry Perl.
+
 0.21  Wed Jun  7 07:45:55 BST 2006
         - Add a missing definition in the header file in order to avoid
           a warning under -Wall.
